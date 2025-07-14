@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>دفع مطلوب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+    }
+    .payment-box {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .payment-number {
+      font-size: 24px;
+      color: orange;
+      margin: 20px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 5px;
+    }
+    .countdown {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #ffa726;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-box">
+    <h2>برجاء الدفع لفتح الموقع</h2>
+    <p>لقد تم إغلاق الموقع مؤقتاً حتى يتم سداد المبلغ المطلوب</p>
+    <p>يرجى التحويل إلى الرقم التالي:</p>
+    <div class="payment-number">01274445091</div>
+    <p>بعد التحويل، سيتم فتح الموقع تلقائياً خلال ساعة واحدة</p>
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+  <script>
+    // عرض العد التنازلي
+    function updateCountdown() {
+      fetch('/api/admin/lock-status')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const endTime = data.unlockTime;
+            const now = Date.now();
+            const diff = endTime - now;
+            
+            if (diff <= 0) {
+              document.getElementById('countdown').textContent = 'جاري فتح الموقع...';
+              setTimeout(() => location.reload(), 2000);
+              return;
+            }
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').textContent = 
+              `الوقت المتبقي: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching lock status:', error);
+          document.getElementById('countdown').textContent = 'جارٍ التحقق من حالة القفل...';
+        });
+    }
+    
+    // تحديث العد التنازلي كل ثانية
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // منع فحص الأكواد
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+          (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+          (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // منع النقر الأيمن
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+  </script>
+</body>
+</html>

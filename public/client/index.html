@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>الصفحة الرئيسية للشحن</title>
+  <link rel="icon" href="https://i.postimg.cc/tJjY5qDy/Whats-App-Image-2025-07-11-at-18-51-08-c043bd06.jpg" type="image/png">  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background-color: #121212;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    form {
+      max-width: 700px;
+      margin: auto;
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background-color: #2c2c2c;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      font-size: 1.2em;
+      color: #ffa726;
+    }
+
+    .options {
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .option {
+      background-color: #2c2c2c;
+      padding: 10px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      flex: 1 1 30%;
+      transition: all 0.3s ease;
+    }
+
+    .option.selected {
+      border-color: #ffa726;
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(255, 167, 38, 0.3);
+    }
+
+    .option img {
+      max-width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #ffa726;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff9800;
+    }
+
+    .contact {
+      margin-top: 40px;
+    }
+    
+    .clan-link-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .clan-link {
+      color: white;
+      font-size: 24px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .clan-link:hover {
+      text-decoration: underline;
+    }
+
+    #screenshotPreview {
+      display: none;
+      margin: 10px 0;
+      text-align: center;
+      animation: fadeIn 0.5s;
+    }
+
+    #previewImage {
+      max-width: 200px;
+      max-height: 200px;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .suggestion-btn {
+      background-color: #2196F3;
+      color: white;
+      margin: 20px auto;
+      display: block;
+      width: 200px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .suggestion-btn:hover {
+      background-color: #0b7dda;
+      transform: scale(1.05);
+    }
+
+    .suggestion-form {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    .suggestion-form.active {
+      max-height: 500px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #333;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .rotate-icon {
+      transition: transform 0.3s;
+    }
+
+    .rotate-icon.rotated {
+      transform: rotate(180deg);
+    }
+    
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      margin: 0 auto;
+    }
+
+    .logo-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      transform: translateY(-2px);
+    }
+
+    .whatsapp-link {
+      background-color: rgba(37, 211, 102, 0.1);
+      color: #25D366;
+    }
+
+    .telegram-link {
+      background-color: rgba(0, 136, 204, 0.1);
+      color: #0088cc;
+    }
+  </style>
+</head>
+<body>
+<div class="logo-container">
+  <img width="300" height="300" src="https://i.postimg.cc/tJjY5qDy/Whats.jpg" alt="TOP STORE.logo">
+  <span class="logo-title">الصفحة الرئيسية للشحن</span>
+</div>
+<form id="orderForm" enctype="multipart/form-data">
+  <input type="text" id="name" placeholder="الاسم داخل اللعبة" required />
+  <input type="text" id="playerId" placeholder="ID اللاعب" required />
+  <input type="email" id="email" placeholder="البريد الالكتروني للتواصل (لو قي مشكلة يعني)" required />
+
+  <div class="section-title">اختر عدد الشدات:</div>
+  <div id="ucOptions" class="options">
+    <div class="option" data-value="60" data-price="45">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546007887MVeNUtB6.png" alt="60 UC" />
+      <br>
+      60 UC <br> 45 جنيه
+    </div>
+    <div class="option" data-value="325" data-price="230">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" alt="325 UC" />
+      <br>
+      325 UC <br> 230 جنيه
+    </div>
+    <div class="option" data-value="660" data-price="440">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" alt="660 UC" />
+      <br>
+      660 UC <br> 440 جنيه
+    </div>
+    <div class="option" data-value="1800" data-price="1130">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546052747L5gSu7VB.png" alt="1800 UC" />
+      <br>
+      1800 UC <br> 1130 جنيه
+    </div>
+    <div class="option" data-value="3850" data-price="2230">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546061912PLgMlY23.png" alt="3850 UC" />
+      <br>
+      3850 UC <br> 2230 جنيه
+    </div>
+    <div class="option" data-value="8100" data-price="4450">
+      <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546071746KqkIhrzG.png" alt="8100 UC" />
+      <br>
+      8100 UC <br> 4450 جنيه
+    </div>
+  </div>
+
+  <div class="section-title">أو اختر حزمة ازدهار:</div>
+  <div id="bundleOptions" class="options">
+    <div class="option" data-value="حزمة الازدهار الاولى" data-price="50">
+      <img src="https://cdn.midasbuy.com/images/FirstPurchasePack.bacd265b.jpg" />
+      <br>
+      حزمة الازدهار الاولى <br> 50 جنيه
+    </div>
+    <div class="option" data-value="حزمة الازدهار الثانية" data-price="145">
+      <img src="https://cdn.midasbuy.com/images/UpgradablePack.8b6dc3a7.jpg" />
+      <br>
+      حزمة الازدهار الثانية <br> 145 جنيه
+    </div>
+    <div class="option" data-value="حزمة الازدهار الثالثة" data-price="235">
+      <img src="https://cdn.midasbuy.com/images/MythicPack.25332821.jpg" />
+      <br>
+      حزمة الازدهار الثالثة <br> 235 جنيه
+    </div>
+    <div class="option" data-value="Prime 3 Month" data-price="135">
+      <img src="https://cdn.midasbuy.com/images/3-ar.c9a3ebd6.jpg" />
+      <br>
+      برايم لمدة 3 اشهر <br> 135 جنيه
+    </div>
+    <div class="option" data-value="Prime 6 Month" data-price="280">
+      <img src="https://cdn.midasbuy.com/images/6-ar.02ac5793.jpg" />
+      <br>
+      برايم لمدة 6 اشهر <br> 280 جنيه
+    </div>
+    <div class="option" data-value="Prime 12 Month" data-price="550">
+      <img src="https://cdn.midasbuy.com/images/12-ar.471c9625.jpg" />
+      <br>
+      برايم لمدة 12 اشهر <br> 550 جنيه
+    </div>
+    <div class="option" data-value="Prime Plus 3 Month" data-price="1380">
+      <img src="https://cdn.midasbuy.com/images/plus3-ar.6742104b.jpg" />
+      <br>
+      برايم بلس لمدة 3 اشهر <br> 1380 جنيه
+    </div>
+    <div class="option" data-value="Prime Plus 6 Month" data-price="2830">
+      <img src="https://cdn.midasbuy.com/images/plus6-ar.6dd77eb1.jpg" />
+      <br>
+      برايم بلس لمدة 6 اشهر <br> 2830 جنيه
+    </div>
+    <div class="option" data-value="الجوهرة" data-price="140">
+      <img src="https://cdn.midasbuy.com/images/weeklytu.aa489de9.jpg" />
+      <br>
+      جوهرة
+      <br>
+      140 جنيه
+    </div>
+    <div class="option" data-value="حزمة العروض الأسبوعية 2" data-price="140">
+      <img src="https://cdn.midasbuy.com/images/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_17270800666888.579501ad.jpg" />
+      <br>
+      Weekly Deal Pack 2
+      <br>
+      حزمة العروض الأسبوعية 2<br> 140 جنيه
+    </div>
+  </div>
+
+  <input type="text" id="transactionId" placeholder="رقم التحويل" required />
+  <input type="text" id="totalAmount" placeholder="المبلغ الإجمالي" readonly />
+  <p style="color: orange; text-align: center;">قم بالتحويل إلى هذا الرقم: <strong>01069507388</strong></p>
+
+  <div class="section-title">سكرين شوت التحويل:</div>
+  <input type="file" id="paymentScreenshot" name="screenshot" accept="image/*" required />
+  <p style="color: orange; text-align: center;">يرجى تصوير إيصال التحويل أو أخذ سكرين شوت للتحويل</p>
+  
+  <div id="screenshotPreview">
+    <img id="previewImage">
+  </div>
+
+  <button type="submit">إرسال الطلب</button>
+
+  <!-- الروابط المضافة بعد زر إرسال الطلب -->
+  <div class="social-links">
+    <a href="https://wa.me/201069507388" class="social-link whatsapp-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      <span>كلمنا واتس اب لشحنات QR بسعر ارخص و لشراء او بيع الكلانات</span>
+    </a>
+    
+    <a href="https://chat.whatsapp.com/JFdQr6Z8j8bKWxQpAf8JHd?mode=r_t" class="social-link whatsapp-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      <span>جروب الاستور واتس</span>
+    </a>
+    
+    <a href="https://t.me/TOP_store_2" class="social-link telegram-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088cc">
+        <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+      </svg>
+      <span>جروب الاستور تيليجرام</span>
+    </a>
+  </div>
+</form>
+
+<div class="contact">
+  <h2>هل لديك استفسار؟</h2>
+  <form id="contactForm">
+    <input type="text" id="contactName" placeholder="اسمك" required />
+    <input type="email" id="contactEmail" placeholder="بريدك الإلكتروني" required />
+    <textarea id="contactMessage" placeholder="اكتب استفسارك هنا..." required></textarea>
+    <button type="submit">إرسال الاستفسار</button>
+  </form>
+</div>
+<div class="suggestion-btn" id="suggestionToggle">
+  <span>لديك اقتراح؟</span>
+  <span class="rotate-icon">▼</span>
+</div>
+
+<div class="suggestion-form" id="suggestionForm">
+  <h2>اقتراحات لتحسين الموقع</h2>
+  <form id="suggestionFormContent">
+    <input type="text" id="suggestionName" placeholder="اسمك" required />
+    <input type="text" id="suggestionContact" placeholder="رقم التليفون أو البريد الإلكتروني" required />
+    <textarea id="suggestionMessage" placeholder="اكتب اقتراحك هنا..." required></textarea>
+    <button type="submit">إرسال الاقتراح</button>
+  </form>
+</div>
+
+<script>
+  const ucOptions = document.querySelectorAll('#ucOptions .option');
+  const bundleOptions = document.querySelectorAll('#bundleOptions .option');
+  let selectedUC = null;
+  let selectedBundle = null;
+
+  function updateTotal() {
+    const total = (selectedUC?.dataset.price || 0) * 1 + (selectedBundle?.dataset.price || 0) * 1;
+    document.getElementById('totalAmount').value = total + " جنيه";
+  }
+
+  // عند اختيار شدات، إلغاء اختيار حزم الازدهار
+  ucOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      ucOptions.forEach(o => o.classList.remove('selected'));
+      option.classList.add('selected');
+      selectedUC = option;
+      
+      // إلغاء اختيار حزم الازدهار إذا تم اختيار شدات
+      bundleOptions.forEach(o => o.classList.remove('selected'));
+      selectedBundle = null;
+      
+      updateTotal();
+    });
+  });
+
+  // عند اختيار حزمة ازدهار، إلغاء اختيار الشدات
+  bundleOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      bundleOptions.forEach(o => o.classList.remove('selected'));
+      option.classList.add('selected');
+      selectedBundle = option;
+      
+      // إلغاء اختيار الشدات إذا تم اختيار حزمة ازدهار
+      ucOptions.forEach(o => o.classList.remove('selected'));
+      selectedUC = null;
+      
+      updateTotal();
+    });
+  });
+
+  document.getElementById('paymentScreenshot').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        document.getElementById('previewImage').src = event.target.result;
+        document.getElementById('screenshotPreview').style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.getElementById('orderForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // التحقق من اختيار نوع واحد فقط
+    if (selectedUC && selectedBundle) {
+      alert("لا يمكن اختيار شدات وحزمة ازدهار معاً، يرجى اختيار نوع واحد فقط");
+      return;
+    }
+    
+    if (!selectedUC && !selectedBundle) {
+      alert("يجب اختيار شدات أو حزمة ازدهار واحدة على الأقل");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', document.getElementById('name').value);
+    formData.append('playerId', document.getElementById('playerId').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('ucAmount', selectedUC ? selectedUC.dataset.value : "");
+    formData.append('bundle', selectedBundle ? selectedBundle.dataset.value : "");
+    formData.append('transactionId', document.getElementById('transactionId').value);
+    formData.append('totalAmount', document.getElementById('totalAmount').value.replace(" جنيه", ""));
+    
+    const screenshotInput = document.getElementById('paymentScreenshot');
+    if (screenshotInput.files[0]) {
+      formData.append('screenshot', screenshotInput.files[0]);
+    }
+
+    try {
+      const response = await fetch("https://top-store-production.up.railway.app/api/order", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || "حدث خطأ في الخادم");
+      }
+
+      if (result.success) {
+        alert("تم إرسال الطلب بنجاح ✅");
+        document.getElementById('orderForm').reset();
+        ucOptions.forEach(o => o.classList.remove('selected'));
+        bundleOptions.forEach(o => o.classList.remove('selected'));
+        selectedUC = null;
+        selectedBundle = null;
+        document.getElementById('screenshotPreview').style.display = 'none';
+        updateTotal();
+      } else {
+        throw new Error(result.message || "حدث خطأ غير معروف");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`حدث خطأ: ${error.message || "فشل إرسال الطلب"}`);
+    }
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const contact = {
+      name: document.getElementById('contactName').value,
+      email: document.getElementById('contactEmail').value,
+      message: document.getElementById('contactMessage').value
+    };
+
+    try {
+      const response = await fetch("https://top-store-production.up.railway.app/api/inquiry", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        credentials: "include",
+        body: JSON.stringify(contact)
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || "حدث خطأ في الخادم");
+      }
+
+      if (result.success) {
+        alert("تم إرسال الاستفسار وسيتم الرد عبر بريدك الإلكتروني.");
+        document.getElementById('contactForm').reset();
+      } else {
+        throw new Error(result.message || "حدث خطأ غير معروف");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`حدث خطأ: ${error.message || "فشل إرسال الاستفسار"}`);
+    }
+  });
+
+  // اقتراحات
+  document.getElementById('suggestionToggle').addEventListener('click', function() {
+    const form = document.getElementById('suggestionForm');
+    const icon = this.querySelector('.rotate-icon');
+    form.classList.toggle('active');
+    icon.classList.toggle('rotated');
+  });
+
+  document.getElementById('suggestionFormContent').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const suggestion = {
+      name: document.getElementById('suggestionName').value,
+      contact: document.getElementById('suggestionContact').value,
+      message: document.getElementById('suggestionMessage').value
+    };
+
+    try {
+      const response = await fetch("https://top-store-production.up.railway.app/api/suggestion", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        credentials: "include",
+        body: JSON.stringify(suggestion)
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || "حدث خطأ في الخادم");
+      }
+
+      if (result.success) {
+        alert("تم إرسال اقتراحك بنجاح، شكراً لك!");
+        document.getElementById('suggestionFormContent').reset();
+      } else {
+        throw new Error(result.message || "حدث خطأ غير معروف");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`حدث خطأ: ${error.message || "فشل إرسال الاقتراح"}`);
+    }
+  });
+</script>
+</body>
+</html>

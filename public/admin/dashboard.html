@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة تحكم المشرف</title>
+  <style>
+    /* أنماط لوحة التحكم الخاصة بالمشرف */
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    .lock-control {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    button {
+      background: orange;
+      color: black;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="lock-control">
+    <h2>تحكم في الموقع</h2>
+    <button id="lockBtn">قفل الموقع</button>
+    <div id="unlockSection" style="display:none; margin-top:20px;">
+      <input type="password" id="unlockKey" placeholder="أدخل المفتاح السري">
+      <button id="unlockBtn">فتح الموقع</button>
+    </div>
+    <div id="status" style="margin-top:20px;"></div>
+  </div>
+
+  <script>
+    // دالة لقفل الموقع
+    async function lockSite() {
+      const res = await fetch("/api/admin/lock-site", {
+        method: "POST",
+        credentials: "include"
+      });
+      const data = await res.json();
+      if (data.success) {
+        updateUI(true);
+      }
+    }
+
+    // دالة لفتح الموقع
+    async function unlockSite() {
+      const key = document.getElementById("unlockKey").value;
+      const res = await fetch("/api/admin/unlock-site", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret: key })
+      });
+      const data = await res.json();
+      if (data.success) {
+        updateUI(false);
+      } else {
+        alert("المفتاح غير صحيح");
+      }
+    }
+
+    // تحديث واجهة المستخدم
+    function updateUI(isLocked) {
+      if (isLocked) {
+        document.getElementById("lockBtn").style.display = "none";
+        document.getElementById("unlockSection").style.display = "block";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:red'>مقفل</span>";
+      } else {
+        document.getElementById("lockBtn").style.display = "inline-block";
+        document.getElementById("unlockSection").style.display = "none";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:green'>مفتوح</span>";
+      }
+    }
+
+    // تحميل الحالة الأولية
+    async function loadStatus() {
+      const res = await fetch("/api/admin/lock-status");
+      const data = await res.json();
+      updateUI(data.isLocked);
+    }
+
+    // إضافة معالجات الأحداث
+    document.getElementById("lockBtn").addEventListener("click", lockSite);
+    document.getElementById("unlockBtn").addEventListener("click", unlockSite);
+
+    // تحميل الحالة عند البدء
+    loadStatus();
+  </script>
+</body>
+</html>
