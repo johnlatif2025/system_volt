@@ -121,14 +121,36 @@ app.use((req, res, next) => {
   // الصفحات التي نريد حمايتها
   const protectedPaths = ['/', '/login', '/dashboard'];
   
-  if (protectedPaths.includes(path) && isSiteLocked && now < unlockTime) {
-    return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
+  if (protectedPaths.includes(path)) {
+    if (isSiteLocked && now < unlockTime) {
+      return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
+    }
+  }
+  
+  // استثناءات المسارات التي لا يجب حمايتها
+  const excludedPaths = [
+    '/admin/login',
+    '/admin/dashboard',
+    '/api/admin/lock-site',
+    '/api/admin/unlock-site',
+    '/api/admin/lock-status',
+    '/payment-required.html',
+    '/public/payment-required.html'
+  ];
+  
+  if (excludedPaths.some(excluded => path.startsWith(excluded))) {
+    return next();
   }
   
   next();
 });
 
-// ============ Routes الجديدة ============
+// ============ Routes ============
+
+// Route للصفحة الرئيسية
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Routes للمشرف
 app.get("/admin/login", (req, res) => {
@@ -148,23 +170,6 @@ app.get("/client/login", (req, res) => {
 app.get("/client/dashboard", (req, res) => {
   if (!req.session.client) return res.redirect('/client/login');
   res.sendFile(path.join(__dirname, 'public/client/dashboard.html'));
-});
-
-// ============ Routes القديمة ============
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get("/dashboard", (req, res) => {
-  if (!req.session.admin) {
-    return res.redirect('/login');
-  }
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 app.get("/payment-required", (req, res) => {
