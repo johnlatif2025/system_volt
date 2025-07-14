@@ -29,14 +29,11 @@
       background: #2a2a2a;
       border-radius: 5px;
     }
-    .countdown {
-      margin-top: 30px;
-      font-size: 18px;
-      color: #ffa726;
-    }
-    .logo {
-      max-width: 150px;
-      margin-bottom: 20px;
+    .redirect-message {
+      margin-top: 20px;
+      color: #4CAF50;
+      font-weight: bold;
+      display: none;
     }
   </style>
 </head>
@@ -46,60 +43,42 @@
     <p>لقد تم إغلاق الموقع مؤقتاً حتى يتم سداد المبلغ المطلوب</p>
     <p>يرجى التحويل إلى الرقم التالي:</p>
     <div class="payment-number">01274445091</div>
-    <p>بعد التحويل، سيتم فتح الموقع تلقائياً خلال ساعة واحدة</p>
-    <div class="countdown" id="countdown"></div>
+    <p>بعد التحويل، سيتم فتح الموقع فوراً</p>
+    <div class="redirect-message" id="redirectMessage">جاري التوجيه للصفحة الرئيسية...</div>
   </div>
 
   <script>
-    // عرض العد التنازلي
-    function updateCountdown() {
+    // دالة للتحقق من حالة القفل كل ثانية
+    function checkLockStatus() {
       fetch('/api/admin/lock-status')
         .then(res => res.json())
         .then(data => {
-          if (data.success) {
-            const endTime = data.unlockTime;
-            const now = Date.now();
-            const diff = endTime - now;
-            
-            if (diff <= 0) {
-              document.getElementById('countdown').textContent = 'جاري فتح الموقع...';
-              setTimeout(() => location.reload(), 2000);
-              return;
-            }
-            
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('countdown').textContent = 
-              `الوقت المتبقي: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          if (data.success && !data.isLocked) {
+            document.getElementById('redirectMessage').style.display = 'block';
+            window.location.href = "/"; // توجيه فوري للصفحة الرئيسية
           }
         })
         .catch(error => {
-          console.error('Error fetching lock status:', error);
-          document.getElementById('countdown').textContent = 'جارٍ التحقق من حالة القفل...';
+          console.error('Error:', error);
         });
     }
-    
-    // تحديث العد التنازلي كل ثانية
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+
+    // التحقق كل ثانية
+    setInterval(checkLockStatus, 1000);
+    // التحقق فور تحميل الصفحة
+    checkLockStatus();
 
     // منع فحص الأكواد
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || 
-          (e.ctrlKey && e.shiftKey && e.key === 'I') || 
-          (e.ctrlKey && e.shiftKey && e.key === 'J') || 
-          (e.ctrlKey && e.key === 'U')) {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+          (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
         e.preventDefault();
-        return false;
       }
     });
 
     // منع النقر الأيمن
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
-      return false;
     });
   </script>
 </body>

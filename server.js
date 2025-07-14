@@ -118,28 +118,27 @@ app.use((req, res, next) => {
   const now = Date.now();
   const path = req.path;
   
-  // الصفحات التي نريد حمايتها
-  const protectedPaths = ['/', '/login', '/dashboard'];
-  
-  if (protectedPaths.includes(path)) {
-    if (isSiteLocked && now < unlockTime) {
-      return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
-    }
-  }
-  
   // استثناءات المسارات التي لا يجب حمايتها
   const excludedPaths = [
+    '/admin',
+    '/api',
+    '/client',
+    '/payment-required.html',
+    '/public/payment-required.html',
     '/admin/login',
     '/admin/dashboard',
     '/api/admin/lock-site',
     '/api/admin/unlock-site',
-    '/api/admin/lock-status',
-    '/payment-required.html',
-    '/public/payment-required.html'
+    '/api/admin/lock-status'
   ];
   
   if (excludedPaths.some(excluded => path.startsWith(excluded))) {
     return next();
+  }
+
+  // إذا كان الموقع مقفولاً، توجيه إلى صفحة الدفع المطلوب
+  if (isSiteLocked && now < unlockTime) {
+    return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
   }
   
   next();
@@ -148,7 +147,10 @@ app.use((req, res, next) => {
 // ============ Routes ============
 
 // Route للصفحة الرئيسية
-app.get("/", (req, res) => {
+app.get(["/", "/index.html"], (req, res) => {
+  if (isSiteLocked) {
+    return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
+  }
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -170,10 +172,6 @@ app.get("/client/login", (req, res) => {
 app.get("/client/dashboard", (req, res) => {
   if (!req.session.client) return res.redirect('/client/login');
   res.sendFile(path.join(__dirname, 'public/client/dashboard.html'));
-});
-
-app.get("/payment-required", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
 });
 
 // ============ API Routes ============
@@ -517,7 +515,7 @@ app.post('/api/admin/unlock-site', (req, res) => {
   if (secret === UNLOCK_SECRET) {
     isSiteLocked = false;
     unlockTime = 0;
-    res.json({ success: true });
+    res.json({ success: true, immediate: true });
   } else {
     res.status(401).json({ success: false, message: "رمز سري غير صحيح" });
   }

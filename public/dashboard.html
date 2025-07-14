@@ -1,693 +1,111 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>لوحة التحكم - شدات ببجي</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>لوحة تحكم المشرف</title>
   <style>
+    /* أنماط لوحة التحكم الخاصة بالمشرف */
     body {
-      margin: 0;
       font-family: 'Cairo', sans-serif;
-      background-color: #121212;
+      background: #121212;
       color: #fff;
+      margin: 0;
       padding: 20px;
     }
-
-    h2 {
+    .lock-control {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
       text-align: center;
     }
-
-    #ordersList, #inquiriesList, #suggestionsList {
-      max-width: 900px;
-      margin: 20px auto;
-    }
-
-    .order, .inquiry, .suggestion {
-      background: #1e1e1e;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .order:hover, .inquiry:hover, .suggestion:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .order p, .inquiry p, .suggestion p {
-      margin: 5px 0;
-    }
-
-    .order button, .inquiry button, .suggestion button {
-      margin: 5px 5px 0 0;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s;
-    }
-
-    .order button:hover, .inquiry button:hover, .suggestion button:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
-    }
-
-    .paid {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    .not-paid {
-      background-color: #f44336;
-      color: white;
-    }
-
-    .delete-btn {
-      background-color: #9e9e9e;
-      color: white;
-    }
-
-    .reply-btn {
-      background-color: #2196F3;
-      color: white;
-    }
-
-    .contact-btn {
-      background-color: #673AB7;
-      color: white;
-    }
-
-    .logout-btn {
-      display: block;
-      margin: auto;
-      background-color: orange;
-      color: black;
-      font-weight: bold;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .status {
-      font-weight: bold;
-      color: orange;
-    }
-
-    .reply-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s;
-    }
-
-    .reply-content {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 500px;
-      transform: scale(0.9);
-      animation: scaleIn 0.3s forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes scaleIn {
-      to { transform: scale(1); }
-    }
-
-    .reply-content h3 {
-      margin-top: 0;
-      color: orange;
-    }
-
-    .reply-content textarea {
-      width: 100%;
-      min-height: 150px;
-      margin: 10px 0;
-      padding: 10px;
-      background: #2a2a2a;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 5px;
-    }
-
-    .reply-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .tab-container {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-    
-    .tab-btn {
-      padding: 10px 20px;
-      background: #333;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s;
-      margin: 5px;
-    }
-    
-    .tab-btn.active {
+    button {
       background: orange;
       color: black;
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(255, 167, 38, 0.3);
-    }
-    
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.5s;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .inquiry.replied {
-      opacity: 0.7;
-      border-left: 4px solid #4CAF50;
-    }
-
-    .screenshot-thumbnail {
-      max-width: 100px;
-      max-height: 100px;
-      cursor: pointer;
-      border: 1px solid #444;
-      border-radius: 5px;
-      transition: transform 0.3s;
-    }
-
-    .screenshot-thumbnail:hover {
-      transform: scale(1.1);
-    }
-    
-    #screenshotModal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      z-index: 1000;
-      text-align: center;
-      animation: fadeIn 0.3s;
-    }
-    
-    #screenshotModal img {
-      max-width: 90%;
-      max-height: 90%;
-      margin-top: 5%;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
-
-    /* أنماط قسم الرسائل المباشرة */
-    .message-form {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #1e1e1e;
-      border-radius: 8px;
-      border: 1px solid #333;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      background: #2a2a2a;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 5px;
-    }
-
-    .form-group textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
-
-    .send-btn {
-      width: 100%;
-      padding: 12px;
-      background-color: #2196F3;
-      color: white;
-      font-weight: bold;
+      padding: 15px 30px;
       border: none;
       border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
+      margin: 10px;
     }
-
-    .send-btn:hover {
-      background-color: #0b7dda;
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
-  
-  <div class="tab-container">
-    <button class="tab-btn active" onclick="openTab('ordersTab')">الطلبات</button>
-    <button class="tab-btn" onclick="openTab('inquiriesTab')">الاستفسارات</button>
-    <button class="tab-btn" onclick="openTab('suggestionsTab')">الاقتراحات</button>
-    <button class="tab-btn" onclick="openTab('messagesTab')">إرسال رسالة</button>
-  </div>
-  
-  <div id="ordersTab" class="tab-content active">
-    <h2>الطلبات</h2>
-    <div id="ordersList"></div>
-  </div>
-  
-  <div id="inquiriesTab" class="tab-content">
-    <h2>الاستفسارات</h2>
-    <div id="inquiriesList"></div>
-  </div>
-
-  <div id="suggestionsTab" class="tab-content">
-    <h2>الاقتراحات</h2>
-    <div id="suggestionsList"></div>
-  </div>
-  
-  <div id="messagesTab" class="tab-content">
-    <h2>إرسال رسالة مباشرة</h2>
-    <div class="message-form">
-      <div class="form-group">
-        <label for="clientEmail">بريد العميل:</label>
-        <input type="email" id="clientEmail" placeholder="أدخل البريد الإلكتروني للعميل">
-      </div>
-      <div class="form-group">
-        <label for="emailSubject">عنوان الرسالة:</label>
-        <input type="text" id="emailSubject" placeholder="أدخل عنوان الرسالة">
-      </div>
-      <div class="form-group">
-        <label for="emailMessage">نص الرسالة:</label>
-        <textarea id="emailMessage" placeholder="اكتب محتوى الرسالة هنا..."></textarea>
-      </div>
-      <button class="send-btn" onclick="sendDirectMessage()">إرسال الرسالة</button>
+  <div class="lock-control">
+    <h2>تحكم في الموقع</h2>
+    <button id="lockBtn">قفل الموقع</button>
+    <div id="unlockSection" style="display:none; margin-top:20px;">
+      <input type="password" id="unlockKey" placeholder="أدخل المفتاح السري">
+      <button id="unlockBtn">فتح الموقع</button>
     </div>
+    <div id="status" style="margin-top:20px;"></div>
   </div>
 
-  <!-- Reply Modal -->
-  <div id="replyModal" class="reply-modal">
-    <div class="reply-content">
-      <h3>رد على الاستفسار</h3>
-      <div id="originalMessage"></div>
-      <textarea id="replyText" placeholder="اكتب ردك هنا..."></textarea>
-      <div class="reply-buttons">
-        <button onclick="sendReply()">إرسال</button>
-        <button onclick="closeReplyModal()">إلغاء</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Screenshot Modal -->
-  <div id="screenshotModal" onclick="this.style.display='none'">
-    <img id="modalImage">
-  </div>
-
- <script>
-    let currentInquiryId = null;
-    let currentInquiryEmail = null;
-    let currentInquiryMessage = null;
-
-    async function loadOrders() {
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/orders", {
-          credentials: "include"
-        });
-        
-        if (!res.ok) throw new Error('Failed to fetch orders');
-        
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'Failed to load orders');
-        
-        const orders = data.data;
-        const container = document.getElementById("ordersList");
-        container.innerHTML = "";
-
-        if (!orders || !Array.isArray(orders)) {
-          throw new Error('Invalid orders data');
-        }
-
-        orders.forEach(order => {
-          const div = document.createElement("div");
-          div.classList.add("order");
-          div.innerHTML = `
-            <p><strong>الاسم:</strong> ${order.name}</p>
-            <p><strong>ID اللاعب:</strong> ${order.playerId}</p>
-            <p><strong>البريد:</strong> ${order.email}</p>
-            <p><strong>النوع:</strong> ${order.type}</p>
-            <p><strong>الكمية:</strong> ${order.ucAmount || order.bundle}</p>
-            <p><strong>المبلغ:</strong> ${order.totalAmount}</p>
-            <p><strong>رقم التحويل:</strong> ${order.transactionId}</p>
-            ${order.screenshot ? `
-              <p><strong>إثبات الدفع:</strong></p>
-              <img src="${order.screenshot}" 
-                   onclick="openScreenshotModal('${order.screenshot}')"
-                   class="screenshot-thumbnail">
-            ` : ''}
-            <p class="status"><strong>الحالة:</strong> ${order.status}</p>
-            <button class="${order.status === 'تم الدفع' ? 'paid' : 'not-paid'}" 
-                    onclick="updateStatus(${order.id}, '${order.status === 'تم الدفع' ? 'لم يتم الدفع' : 'تم الدفع'}')">
-              ${order.status === 'تم الدفع' ? 'تم الدفع' : 'لم يتم الدفع'}
-            </button>
-            <button class="delete-btn" onclick="deleteOrder(${order.id})">حذف</button>
-          `;
-          container.appendChild(div);
-        });
-      } catch (error) {
-        console.error("Error loading orders:", error);
-        alert("حدث خطأ أثناء تحميل الطلبات: " + error.message);
-      }
-    }
-
-    function openScreenshotModal(src) {
-      document.getElementById('modalImage').src = src;
-      document.getElementById('screenshotModal').style.display = 'block';
-    }
-
-    async function loadInquiries() {
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/inquiries", {
-          credentials: "include"
-        });
-        
-        if (!res.ok) throw new Error('Failed to fetch inquiries');
-        
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'Failed to load inquiries');
-        
-        const inquiries = data.data;
-        const container = document.getElementById("inquiriesList");
-        container.innerHTML = "";
-
-        if (!inquiries || !Array.isArray(inquiries)) {
-          throw new Error('Invalid inquiries data');
-        }
-
-        inquiries.forEach(inquiry => {
-          const div = document.createElement("div");
-          div.classList.add("inquiry");
-          if (inquiry.status === 'تم الرد') {
-            div.classList.add("replied");
-          }
-          
-          div.innerHTML = `
-            <p><strong>البريد:</strong> ${inquiry.email}</p>
-            <p><strong>التاريخ:</strong> ${new Date(inquiry.created_at).toLocaleString()}</p>
-            <p><strong>الرسالة:</strong> ${inquiry.message}</p>
-            <button class="reply-btn" onclick="openReplyModal(${inquiry.id}, '${inquiry.email.replace(/'/g, "\\'")}', '${inquiry.message.replace(/'/g, "\\'").replace(/\n/g, '<br>')}')">
-              ${inquiry.status === 'تم الرد' ? '✉️ إعادة رد' : '✉️ رد'}
-            </button>
-            <button class="delete-btn" onclick="deleteInquiry(${inquiry.id})">🗑️ حذف</button>
-          `;
-          container.appendChild(div);
-        });
-      } catch (error) {
-        console.error("Error loading inquiries:", error);
-        alert("حدث خطأ أثناء تحميل الاستفسارات: " + error.message);
-      }
-    }
-
-    async function loadSuggestions() {
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/suggestions", {
-          credentials: "include"
-        });
-        
-        if (!res.ok) throw new Error('Failed to fetch suggestions');
-        
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'Failed to load suggestions');
-        
-        const suggestions = data.data;
-        const container = document.getElementById("suggestionsList");
-        container.innerHTML = "";
-
-        if (!suggestions || !Array.isArray(suggestions)) {
-          throw new Error('Invalid suggestions data');
-        }
-
-        suggestions.forEach(suggestion => {
-          const div = document.createElement("div");
-          div.classList.add("suggestion");
-          div.innerHTML = `
-            <p><strong>الاسم:</strong> ${suggestion.name}</p>
-            <p><strong>طريقة التواصل:</strong> ${suggestion.contact}</p>
-            <p><strong>التاريخ:</strong> ${new Date(suggestion.created_at).toLocaleString()}</p>
-            <p><strong>الاقتراح:</strong> ${suggestion.message}</p>
-            <button class="contact-btn" onclick="contactSuggestion('${suggestion.contact.replace(/'/g, "\\'")}')">
-              ✉️ التواصل
-            </button>
-            <button class="delete-btn" onclick="deleteSuggestion(${suggestion.id})">🗑️ حذف</button>
-          `;
-          container.appendChild(div);
-        });
-      } catch (error) {
-        console.error("Error loading suggestions:", error);
-        alert("حدث خطأ أثناء تحميل الاقتراحات: " + error.message);
-      }
-    }
-
-    function contactSuggestion(contact) {
-      document.getElementById('clientEmail').value = contact.includes('@') ? contact : '';
-      document.getElementById('emailSubject').value = "رد على اقتراحك";
-      openTab('messagesTab');
-    }
-
-    async function deleteSuggestion(id) {
-      if (confirm("هل أنت متأكد من حذف هذا الاقتراح؟")) {
-        try {
-          const res = await fetch("https://top-store-production.up.railway.app/api/admin/delete-suggestion", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ id })
-          });
-          
-          if (!res.ok) throw new Error('Failed to delete suggestion');
-          
-          loadSuggestions();
-        } catch (error) {
-          console.error("Error deleting suggestion:", error);
-          alert("حدث خطأ أثناء حذف الاقتراح: " + error.message);
-        }
-      }
-    }
-
-    function openReplyModal(id, email, message) {
-      currentInquiryId = id;
-      currentInquiryEmail = email;
-      currentInquiryMessage = message;
-      
-      document.getElementById("originalMessage").innerHTML = `
-        <strong>الرسالة الأصلية من ${email}:</strong><br>
-        ${message}
-      `;
-      document.getElementById("replyText").value = "";
-      document.getElementById("replyModal").style.display = "flex";
-    }
-
-    function closeReplyModal() {
-      document.getElementById("replyModal").style.display = "none";
-    }
-
-    async function sendReply() {
-      const replyText = document.getElementById("replyText").value.trim();
-      if (!replyText) {
-        alert("يرجى كتابة رد");
-        return;
-      }
-
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/reply-inquiry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            inquiryId: currentInquiryId,
-            email: currentInquiryEmail,
-            message: currentInquiryMessage,
-            reply: replyText
-          })
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          alert("تم إرسال الرد بنجاح");
-          closeReplyModal();
-          loadInquiries();
-        } else {
-          throw new Error(result.message || "فشل إرسال الرد");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("حدث خطأ أثناء محاولة الإرسال: " + error.message);
-      }
-    }
-
-    async function sendDirectMessage() {
-      const email = document.getElementById("clientEmail").value.trim();
-      const subject = document.getElementById("emailSubject").value.trim();
-      const message = document.getElementById("emailMessage").value.trim();
-
-      if (!email || !subject || !message) {
-        alert("يرجى ملء جميع الحقول");
-        return;
-      }
-
-      if (!confirm(`هل تريد إرسال هذه الرسالة إلى ${email}؟`)) {
-        return;
-      }
-
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/send-message", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email, subject, message })
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          alert("تم إرسال الرسالة بنجاح");
-          document.getElementById("clientEmail").value = "";
-          document.getElementById("emailSubject").value = "";
-          document.getElementById("emailMessage").value = "";
-        } else {
-          throw new Error(result.message || "فشل إرسال الرسالة");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("حدث خطأ أثناء محاولة الإرسال: " + error.message);
-      }
-    }
-
-    async function updateStatus(id, status) {
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/update-status", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ id, status })
-        });
-        
-        if (!res.ok) throw new Error('Failed to update status');
-        
-        loadOrders();
-      } catch (error) {
-        console.error("Error updating status:", error);
-        alert("حدث خطأ أثناء تحديث الحالة: " + error.message);
-      }
-    }
-
-    async function deleteOrder(id) {
-      if (confirm("هل أنت متأكد من حذف الطلب؟")) {
-        try {
-          const res = await fetch("https://top-store-production.up.railway.app/api/admin/delete-order", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ id })
-          });
-          
-          if (!res.ok) throw new Error('Failed to delete order');
-          
-          loadOrders();
-        } catch (error) {
-          console.error("Error deleting order:", error);
-          alert("حدث خطأ أثناء حذف الطلب: " + error.message);
-        }
-      }
-    }
-
-    async function deleteInquiry(id) {
-      if (confirm("هل أنت متأكد من حذف هذا الاستفسار؟")) {
-        try {
-          const res = await fetch("https://top-store-production.up.railway.app/api/admin/delete-inquiry", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ id })
-          });
-          
-          if (!res.ok) throw new Error('Failed to delete inquiry');
-          
-          loadInquiries();
-        } catch (error) {
-          console.error("Error deleting inquiry:", error);
-          alert("حدث خطأ أثناء حذف الاستفسار: " + error.message);
-        }
-      }
-    }
-
-    function openTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
+  <script>
+    // دالة لقفل الموقع
+    async function lockSite() {
+      const res = await fetch("/api/admin/lock-site", {
+        method: "POST",
+        credentials: "include"
       });
-      
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      document.getElementById(tabId).classList.add('active');
-      event.currentTarget.classList.add('active');
-    }
-
-    async function logout() {
-      try {
-        const res = await fetch("https://top-store-production.up.railway.app/api/admin/logout", { 
-          method: "POST",
-          credentials: "include"
-        });
-        
-        if (!res.ok) throw new Error('Failed to logout');
-        
-        window.location.href = "login.html";
-      } catch (error) {
-        console.error("Error logging out:", error);
-        alert("حدث خطأ أثناء تسجيل الخروج: " + error.message);
+      const data = await res.json();
+      if (data.success) {
+        updateUI(true);
       }
     }
 
-    // تحميل البيانات عند فتح الصفحة
-    loadOrders();
-    loadInquiries();
-    loadSuggestions();
+    // دالة لفتح الموقع
+    async function unlockSite() {
+      const key = document.getElementById("unlockKey").value;
+      const res = await fetch("/api/admin/unlock-site", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret: key })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        alert("تم فتح الموقع بنجاح");
+        window.location.reload();
+      } else {
+        alert("المفتاح غير صحيح");
+      }
+    }
+
+    // تحديث واجهة المستخدم
+    function updateUI(isLocked) {
+      if (isLocked) {
+        document.getElementById("lockBtn").style.display = "none";
+        document.getElementById("unlockSection").style.display = "block";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:red'>مقفل</span>";
+      } else {
+        document.getElementById("lockBtn").style.display = "inline-block";
+        document.getElementById("unlockSection").style.display = "none";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:green'>مفتوح</span>";
+      }
+    }
+
+    // تحميل الحالة الأولية
+    async function loadStatus() {
+      const res = await fetch("/api/admin/lock-status");
+      const data = await res.json();
+      updateUI(data.isLocked);
+    }
+
+    // إضافة معالجات الأحداث
+    document.getElementById("lockBtn").addEventListener("click", lockSite);
+    document.getElementById("unlockBtn").addEventListener("click", unlockSite);
+
+    // تحميل الحالة عند البدء
+    loadStatus();
   </script>
 </body>
 </html>
