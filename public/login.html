@@ -65,23 +65,58 @@
   </div>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    // التحقق من حالة قفل الموقع
+    async function checkSiteLock() {
+      try {
+        const response = await fetch('/api/admin/lock-status');
+        const result = await response.json();
+        
+        if (result.success && result.isLocked) {
+          window.location.href = '/payment-required.html';
+        }
+      } catch (error) {
+        console.error('Error checking lock status:', error);
+      }
+    }
 
-      const res = await fetch("https://top-store-production.up.railway.app/api/admin/login", {
+    // التحقق عند تحميل الصفحة
+    checkSiteLock();
+
+    // التحقق كل 3 ثواني
+    setInterval(checkSiteLock, 3000);
+
+    // منع أدوات المطور
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      alert('غير مسموح باستخدام النقر الأيمن');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+          (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+          (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        alert('غير مسموح بالوصول إلى أدوات المطور');
+      }
+    });
+
+    document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value
+        })
       });
-
+      
       const data = await res.json();
       if (data.success) {
-        window.location.href = "dashboard.html";
+        window.location.href = "/dashboard.html";
       } else {
-        alert("Login failed: " + (data.message || "Invalid credentials"));
+        alert("بيانات الدخول غير صحيحة");
       }
     });
   </script>

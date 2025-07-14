@@ -270,6 +270,82 @@
       });
     });
 
+    // دالة لقفل الموقع
+    async function lockSite() {
+      try {
+        const response = await fetch("/api/admin/lock-site", {
+          method: "POST",
+          credentials: "include"
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert("تم قفل الموقع بنجاح");
+          updateUI(true);
+        }
+      } catch (error) {
+        console.error("Error locking site:", error);
+        alert("حدث خطأ أثناء محاولة قفل الموقع");
+      }
+    }
+
+    // دالة لفتح الموقع
+    async function unlockSite() {
+      const key = document.getElementById("unlockKey").value;
+      try {
+        const response = await fetch("/api/admin/unlock-site", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ secret: key })
+        });
+        const data = await response.json();
+        if (data.success) {
+          alert("تم فتح الموقع بنجاح");
+          updateUI(false);
+        } else {
+          alert("المفتاح غير صحيح");
+        }
+      } catch (error) {
+        console.error("Error unlocking site:", error);
+        alert("حدث خطأ أثناء محاولة فتح الموقع");
+      }
+    }
+
+    // تحديث واجهة المستخدم
+    function updateUI(isLocked) {
+      if (isLocked) {
+        document.getElementById("lockBtn").style.display = "none";
+        document.getElementById("unlockSection").style.display = "block";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:red'>مقفل</span>";
+      } else {
+        document.getElementById("lockBtn").style.display = "inline-block";
+        document.getElementById("unlockSection").style.display = "none";
+        document.getElementById("status").innerHTML = "حالة الموقع: <span style='color:green'>مفتوح</span>";
+      }
+    }
+
+    // تحميل الحالة الأولية
+    async function loadStatus() {
+      try {
+        const response = await fetch("/api/admin/lock-status", {
+          credentials: "include"
+        });
+        const data = await response.json();
+        if (data.success) {
+          updateUI(data.isLocked);
+        }
+      } catch (error) {
+        console.error("Error loading lock status:", error);
+      }
+    }
+
+    // إضافة معالجات الأحداث
+    document.getElementById("lockBtn").addEventListener("click", lockSite);
+    document.getElementById("unlockBtn").addEventListener("click", unlockSite);
+
+    // تحميل الحالة عند البدء
+    loadStatus();
+
     // تحميل الطلبات
     async function loadOrders(searchTerm = '') {
       try {

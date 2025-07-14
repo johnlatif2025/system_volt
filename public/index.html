@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>الصفحة الرئيسية للشحن</title>
+  <title>الصفحة الرئيسية للشحن</title>
   <link rel="icon" href="https://i.postimg.cc/tJjY5qDy/Whats-App-Image-2025-07-11-at-18-51-08-c043bd06.jpg" type="image/png">  
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
   <style>
@@ -390,6 +390,42 @@
 </div>
 
 <script>
+  // التحقق من حالة قفل الموقع
+  async function checkSiteLock() {
+    try {
+      const response = await fetch('/api/admin/lock-status');
+      const result = await response.json();
+      
+      if (result.success && result.isLocked) {
+        window.location.href = '/payment-required.html';
+      }
+    } catch (error) {
+      console.error('Error checking lock status:', error);
+    }
+  }
+
+  // التحقق عند تحميل الصفحة
+  checkSiteLock();
+
+  // التحقق كل 3 ثواني
+  setInterval(checkSiteLock, 3000);
+
+  // منع أدوات المطور
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('غير مسموح باستخدام النقر الأيمن');
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+        (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+        (e.ctrlKey && e.key === 'U')) {
+      e.preventDefault();
+      alert('غير مسموح بالوصول إلى أدوات المطور');
+    }
+  });
+
   const ucOptions = document.querySelectorAll('#ucOptions .option');
   const bundleOptions = document.querySelectorAll('#bundleOptions .option');
   let selectedUC = null;

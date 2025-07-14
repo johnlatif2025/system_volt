@@ -35,6 +35,12 @@
       font-weight: bold;
       display: none;
     }
+    .admin-link {
+      margin-top: 20px;
+      display: block;
+      color: #ffa726;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -55,7 +61,9 @@
         .then(data => {
           if (data.success && !data.isLocked) {
             document.getElementById('redirectMessage').style.display = 'block';
-            window.location.href = "/"; // توجيه فوري للصفحة الرئيسية
+            setTimeout(() => {
+              window.location.href = "/"; // توجيه للصفحة الرئيسية بعد ثانيتين
+            }, 2000);
           }
         })
         .catch(error => {
@@ -73,12 +81,16 @@
       if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
           (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
         e.preventDefault();
+        alert('غير مسموح بالوصول إلى أدوات المطور');
+        return false;
       }
     });
 
     // منع النقر الأيمن
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
+      alert('غير مسموح باستخدام النقر الأيمن');
+      return false;
     });
   </script>
 </body>
