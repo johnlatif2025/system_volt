@@ -89,13 +89,6 @@ db.serialize(() => {
     message TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS admin_users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT,
-    is_super_admin BOOLEAN DEFAULT 0
-  )`);
 });
 
 // إعداد البريد الإلكتروني
@@ -107,75 +100,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// متغيرات التحكم في قفل الموقع
-const LOCK_EXPIRATION = 60 * 60 * 1000; // ساعة واحدة بالمللي ثانية
-let isSiteLocked = false;
-let unlockTime = 0;
-const UNLOCK_SECRET = process.env.UNLOCK_SECRET || 'your-very-secret-key';
-
-// Middleware للتحقق من حالة القفل
-app.use((req, res, next) => {
-  const now = Date.now();
-  const path = req.path;
-  
-  // استثناءات المسارات التي لا يجب حمايتها
-  const excludedPaths = [
-    '/admin',
-    '/api',
-    '/client',
-    '/payment-required.html',
-    '/public/payment-required.html',
-    '/admin/login',
-    '/admin/dashboard',
-    '/api/admin/lock-site',
-    '/api/admin/unlock-site',
-    '/api/admin/lock-status'
-  ];
-  
-  if (excludedPaths.some(excluded => path.startsWith(excluded))) {
-    return next();
-  }
-
-  // إذا كان الموقع مقفولاً، توجيه إلى صفحة الدفع المطلوب
-  if (isSiteLocked && now < unlockTime) {
-    return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
-  }
-  
-  next();
-});
-
-// ============ Routes ============
-
-// Route للصفحة الرئيسية
-app.get(["/", "/index.html"], (req, res) => {
-  if (isSiteLocked) {
-    return res.sendFile(path.join(__dirname, 'public', 'payment-required.html'));
-  }
+// Routes لخدمة صفحات HTML
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Routes للمشرف
-app.get("/admin/login", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/admin/login.html'));
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get("/admin/dashboard", (req, res) => {
-  if (!req.session.admin) return res.redirect('/admin/login');
-  res.sendFile(path.join(__dirname, 'public/admin/dashboard.html'));
+app.get("/dashboard", (req, res) => {
+  if (!req.session.admin) {
+    return res.redirect('/login');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Routes للعميل
-app.get("/client/login", (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/client/login.html'));
-});
-
-app.get("/client/dashboard", (req, res) => {
-  if (!req.session.client) return res.redirect('/client/login');
-  res.sendFile(path.join(__dirname, 'public/client/dashboard.html'));
-});
-
-// ============ API Routes ============
-
+// API Routes
 app.post("/api/order", upload.single('screenshot'), (req, res) => {
   const { name, playerId, email, ucAmount, bundle, totalAmount, transactionId } = req.body;
   
@@ -275,39 +216,14 @@ app.post("/api/suggestion", async (req, res) => {
   }
 });
 
-// ============ Admin Routes ============
-
+// Admin Routes
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
-  
-  // التحقق من المشرف الرئيسي
-  if (username === process.env.SUPER_ADMIN_USER && password === process.env.SUPER_ADMIN_PASS) {
-    req.session.admin = { 
-      username: username,
-      isSuperAdmin: true 
-    };
-    return res.json({ success: true, isSuperAdmin: true });
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+    req.session.admin = true;
+    return res.json({ success: true });
   }
-  
-  // التحقق من المشرفين الآخرين في قاعدة البيانات
-  db.get(
-    "SELECT * FROM admin_users WHERE username = ? AND password = ?",
-    [username, password],
-    (err, row) => {
-      if (err || !row) {
-        return res.status(401).json({ success: false, message: 'بيانات الدخول غير صحيحة' });
-      }
-      
-      req.session.admin = { 
-        username: row.username,
-        isSuperAdmin: row.is_super_admin === 1 
-      };
-      res.json({ 
-        success: true, 
-        isSuperAdmin: row.is_super_admin === 1 
-      });
-    }
-  );
+  res.status(401).json({ success: false, message: 'بيانات الدخول غير صحيحة' });
 });
 
 app.post("/api/admin/logout", (req, res) => {
@@ -493,70 +409,7 @@ app.post("/api/admin/send-message", async (req, res) => {
   }
 });
 
-// ============ Routes التحكم في الموقع ============
-
-app.post('/api/admin/lock-site', (req, res) => {
-  if (!req.session.admin?.isSuperAdmin) {
-    return res.status(403).json({ success: false, message: "غير مصرح - تحتاج صلاحيات المشرف الرئيسي" });
-  }
-  
-  isSiteLocked = true;
-  unlockTime = Date.now() + LOCK_EXPIRATION;
-  res.json({ success: true, unlockTime });
-});
-
-app.post('/api/admin/unlock-site', (req, res) => {
-  if (!req.session.admin?.isSuperAdmin) {
-    return res.status(403).json({ success: false, message: "غير مصرح - تحتاج صلاحيات المشرف الرئيسي" });
-  }
-  
-  const { secret } = req.body;
-  
-  if (secret === UNLOCK_SECRET) {
-    isSiteLocked = false;
-    unlockTime = 0;
-    res.json({ success: true, immediate: true });
-  } else {
-    res.status(401).json({ success: false, message: "رمز سري غير صحيح" });
-  }
-});
-
-app.get('/api/admin/lock-status', (req, res) => {
-  if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
-  res.json({ 
-    success: true, 
-    isLocked: isSiteLocked, 
-    unlockTime,
-    timeRemaining: isSiteLocked ? Math.max(0, unlockTime - Date.now()) : 0,
-    isSuperAdmin: req.session.admin?.isSuperAdmin || false
-  });
-});
-
-// ============ تشغيل الخادم ============
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  
-  // إضافة المشرف الرئيسي إذا لم يكن موجوداً
-  db.get(
-    "SELECT * FROM admin_users WHERE username = ?",
-    [process.env.SUPER_ADMIN_USER],
-    (err, row) => {
-      if (!row && process.env.SUPER_ADMIN_USER && process.env.SUPER_ADMIN_PASS) {
-        db.run(
-          "INSERT INTO admin_users (username, password, is_super_admin) VALUES (?, ?, 1)",
-          [process.env.SUPER_ADMIN_USER, process.env.SUPER_ADMIN_PASS],
-          (err) => {
-            if (err) {
-              console.error("Error creating super admin:", err);
-            } else {
-              console.log("Super admin created successfully");
-            }
-          }
-        );
-      }
-    }
-  );
 });
