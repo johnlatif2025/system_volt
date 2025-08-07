@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const multer = require('multer');
 const fs = require('fs');
-require('dotenv').config();
+require('dotenv').config(); // تأكد من أن هذا السطر موجود لتحميل متغيرات البيئة
 
 const app = express();
 
@@ -55,6 +55,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   }
+  // يمكنك إضافة قيود على حجم الملفات أو أنواعها هنا
 });
 const upload = multer({ storage });
 
@@ -431,6 +432,49 @@ app.post("/api/admin/send-message", async (req, res) => {
     res.status(500).json({ success: false, message: "فشل إرسال الرسالة" });
   }
 });
+
+// API لتغيير كلمة مرور المسؤول
+app.post('/api/admin/change-password', (req, res) => {
+  const { username, currentPassword, newPassword } = req.body;
+
+  // تحقق من بيانات الدخول الحالية
+  if (username !== process.env.ADMIN_USER || currentPassword !== process.env.ADMIN_PASS) {
+    return res.status(401).json({ success: false, message: 'اسم المستخدم أو كلمة المرور الحالية غير صحيحة' });
+  }
+
+  // تحقق من أن كلمة المرور الجديدة ليست فارغة
+  if (!newPassword || newPassword.trim() === '') {
+    return res.status(400).json({ success: false, message: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة' });
+  }
+
+  const envPath = path.join(__dirname, '.env');
+
+  fs.readFile(envPath, 'utf8', (err, data) => {
+    if (err) {
+      console.error("Error reading .env file:", err);
+      return res.status(500).json({ success: false, message: 'خطأ في قراءة ملف الإعدادات' });
+    }
+
+    // استبدال كلمة المرور القديمة بالجديدة في محتوى الملف
+    // يجب أن تكون حذراً هنا لضمان استبدال السطر الصحيح فقط
+    let updatedData = data.replace(`ADMIN_PASS=${currentPassword}`, `ADMIN_PASS=${newPassword}`);
+
+    fs.writeFile(envPath, updatedData, 'utf8', (err) => {
+      if (err) {
+        console.error("Error writing to .env file:", err);
+        return res.status(500).json({ success: false, message: 'خطأ في تحديث ملف الإعدادات' });
+      }
+
+      // تحديث متغير البيئة في الذاكرة ليعكس التغيير فوراً
+      // هذا مهم لكي لا تحتاج لإعادة تشغيل الخادم فوراً لتطبيق التغيير
+      process.env.ADMIN_PASS = newPassword;
+
+      console.log("Admin password updated successfully in .env");
+      res.json({ success: true, message: 'تم تغيير كلمة المرور بنجاح' });
+    });
+  });
+});
+
 
 // --- Products API Routes (UC Options & Bundles) ---
 // Get all products (UC options and bundles)
