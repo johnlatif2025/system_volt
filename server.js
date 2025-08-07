@@ -99,10 +99,12 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // جدول جديد للشدات
-  db.run(`CREATE TABLE IF NOT EXISTS uc_options (
+  // جدول جديد للمنتجات (شدات وحزم)
+  db.run(`CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    uc_amount INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,   -- 'uc' أو 'bundle'
+    amount INTEGER,           -- عدد الشدات (لـ UC)
     price REAL NOT NULL,
     image_url TEXT
   )`);
@@ -126,27 +128,40 @@ app.get("/dashboard", (req, res) => {
 
 // API Routes
 app.post("/api/order", upload.single('screenshot'), (req, res) => {
-  const { name, playerId, email, ucAmount, bundle, totalAmount, transactionId } = req.body;
+  const { name, playerId, email, selectedProductId, totalAmount, transactionId } = req.body;
 
-  if (!name || !playerId || !email || !transactionId || !totalAmount || (!ucAmount && !bundle)) {
+  if (!name || !playerId || !email || !transactionId || !totalAmount || !selectedProductId) {
     return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
   }
 
-  const type = ucAmount ? "UC" : "Bundle";
-  const screenshot = req.file ? `/uploads/${req.file.filename}` : null;
-
-  db.run(
-    `INSERT INTO orders (name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot],
-    function(err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ success: false, message: "حدث خطأ أثناء الحفظ" });
-      }
-      res.json({ success: true, id: this.lastID });
+  // جلب تفاصيل المنتج من قاعدة البيانات بناءً على selectedProductId
+  db.get("SELECT name, category, amount FROM products WHERE id = ?", [selectedProductId], (err, product) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات عند جلب تفاصيل المنتج" });
     }
-  );
+    if (!product) {
+      return res.status(404).json({ success: false, message: "المنتج المحدد غير موجود" });
+    }
+
+    const type = product.category === 'uc' ? "UC" : "Bundle";
+    const ucAmount = product.category === 'uc' ? product.amount : null;
+    const bundle = product.category === 'bundle' ? product.name : null;
+    const screenshot = req.file ? `/uploads/${req.file.filename}` : null;
+
+    db.run(
+      `INSERT INTO orders (name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot],
+      function(err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ success: false, message: "حدث خطأ أثناء الحفظ" });
+        }
+        res.json({ success: true, id: this.lastID });
+      }
+    );
+  });
 });
 
 app.post("/api/inquiry", async (req, res) => {
@@ -417,10 +432,10 @@ app.post("/api/admin/send-message", async (req, res) => {
   }
 });
 
-// --- UC Options API Routes ---
-// Get all UC options
-app.get("/api/uc-options", (req, res) => {
-  db.all("SELECT * FROM uc_options ORDER BY uc_amount ASC", (err, rows) => {
+// --- Products API Routes (UC Options & Bundles) ---
+// Get all products (UC options and bundles)
+app.get("/api/products", (req, res) => {
+  db.all("SELECT * FROM products ORDER BY category ASC, amount ASC, price ASC", (err, rows) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
@@ -429,11 +444,11 @@ app.get("/api/uc-options", (req, res) => {
   });
 });
 
-// Admin: Get all UC options (requires admin session)
-app.get("/api/admin/uc-options", (req, res) => {
+// Admin: Get all products (requires admin session)
+app.get("/api/admin/products", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
 
-  db.all("SELECT * FROM uc_options ORDER BY uc_amount ASC", (err, rows) => {
+  db.all("SELECT * FROM products ORDER BY category ASC, amount ASC, price ASC", (err, rows) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
@@ -442,18 +457,21 @@ app.get("/api/admin/uc-options", (req, res) => {
   });
 });
 
-// Admin: Add a new UC option
-app.post("/api/admin/uc-options", (req, res) => {
+// Admin: Add a new product
+app.post("/api/admin/products", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
 
-  const { uc_amount, price, image_url } = req.body;
-  if (!uc_amount || !price || !image_url) {
-    return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
+  const { name, category, amount, price, image_url } = req.body;
+  if (!name || !category || !price || !image_url) {
+    return res.status(400).json({ success: false, message: "جميع الحقول المطلوبة (الاسم، الفئة، السعر، الصورة) مطلوبة" });
+  }
+  if (category === 'uc' && (amount === undefined || amount === null)) { // Changed to check for undefined/null
+    return res.status(400).json({ success: false, message: "عدد الشدات مطلوب لفئة UC" });
   }
 
   db.run(
-    "INSERT INTO uc_options (uc_amount, price, image_url) VALUES (?, ?, ?)",
-    [uc_amount, price, image_url],
+    "INSERT INTO products (name, category, amount, price, image_url) VALUES (?, ?, ?, ?, ?)",
+    [name, category, amount, price, image_url],
     function(err) {
       if (err) {
         console.error(err);
@@ -464,49 +482,52 @@ app.post("/api/admin/uc-options", (req, res) => {
   );
 });
 
-// Admin: Update an existing UC option
-app.put("/api/admin/uc-options/:id", (req, res) => {
+// Admin: Update an existing product
+app.put("/api/admin/products/:id", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
 
   const { id } = req.params;
-  const { uc_amount, price, image_url } = req.body;
-  if (!uc_amount || !price || !image_url) {
-    return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
+  const { name, category, amount, price, image_url } = req.body;
+  if (!name || !category || !price || !image_url) {
+    return res.status(400).json({ success: false, message: "جميع الحقول المطلوبة (الاسم، الفئة، السعر، الصورة) مطلوبة" });
+  }
+  if (category === 'uc' && (amount === undefined || amount === null)) { // Changed to check for undefined/null
+    return res.status(400).json({ success: false, message: "عدد الشدات مطلوب لفئة UC" });
   }
 
   db.run(
-    "UPDATE uc_options SET uc_amount = ?, price = ?, image_url = ? WHERE id = ?",
-    [uc_amount, price, image_url, id],
+    "UPDATE products SET name = ?, category = ?, amount = ?, price = ?, image_url = ? WHERE id = ?",
+    [name, category, amount, price, image_url, id],
     function(err) {
       if (err) {
         console.error(err);
         return res.status(500).json({ success: false, message: "حدث خطأ أثناء التحديث" });
       }
       if (this.changes === 0) {
-        return res.status(404).json({ success: false, message: "الشدة غير موجودة" });
+        return res.status(404).json({ success: false, message: "المنتج غير موجود" });
       }
       res.json({ success: true });
     }
   );
 });
 
-// Admin: Delete a UC option
-app.delete("/api/admin/uc-options/:id", (req, res) => {
+// Admin: Delete a product
+app.delete("/api/admin/products/:id", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
 
   const { id } = req.params;
-  db.run("DELETE FROM uc_options WHERE id = ?", [id], function(err) {
+  db.run("DELETE FROM products WHERE id = ?", [id], function(err) {
     if (err) {
       console.error(err);
       return res.status(500).json({ success: false, message: "حدث خطأ أثناء الحذف" });
     }
     if (this.changes === 0) {
-      return res.status(404).json({ success: false, message: "الشدة غير موجودة" });
+      return res.status(404).json({ success: false, message: "المنتج غير موجود" });
     }
     res.json({ success: true });
   });
 });
-// --- End UC Options API Routes ---
+// --- End Products API Routes ---
 
 
 const PORT = process.env.PORT || 3000;

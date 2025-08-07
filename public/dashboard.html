@@ -978,9 +978,9 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link" onclick="openTab('ucManagementTab')">
-            <i class="fas fa-coins"></i>
-            <span>إدارة الشدات</span>
+          <a href="#" class="nav-link" onclick="openTab('productManagementTab')">
+            <i class="fas fa-box-open"></i>
+            <span>إدارة المنتجات</span>
           </a>
         </li>
       </ul>
@@ -1139,13 +1139,13 @@
         </div>
       </div>
 
-      <!-- قسم إدارة الشدات (UC) -->
-      <div id="ucManagementTab" class="section tab-content">
+      <!-- قسم إدارة المنتجات (UC & Bundles) -->
+      <div id="productManagementTab" class="section tab-content">
         <div class="section-header">
-          <h2><i class="fas fa-coins"></i> إدارة الشدات (UC)</h2>
+          <h2><i class="fas fa-box-open"></i> إدارة المنتجات (شدات وحزم)</h2>
           <div class="actions">
-            <button class="btn btn-success" onclick="openUcModal()">
-              <i class="fas fa-plus"></i> إضافة شدة جديدة
+            <button class="btn btn-success" onclick="openProductModal()">
+              <i class="fas fa-plus"></i> إضافة منتج جديد
             </button>
           </div>
         </div>
@@ -1154,13 +1154,15 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>الشدات</th>
+                <th>الاسم</th>
+                <th>الفئة</th>
+                <th>الكمية (شدات)</th>
                 <th>السعر (ج.م)</th>
                 <th>الصورة</th>
                 <th>الإجراءات</th>
               </tr>
             </thead>
-            <tbody id="ucOptionsList">
+            <tbody id="productsList">
               <!-- سيتم ملؤها بالبيانات -->
             </tbody>
           </table>
@@ -1201,32 +1203,44 @@
     </div>
   </div>
 
-  <!-- مودال إضافة/تعديل الشدات -->
-  <div id="ucModal" class="modal">
+  <!-- مودال إضافة/تعديل المنتجات -->
+  <div id="productModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="ucModalTitle"><i class="fas fa-coins"></i> إضافة/تعديل شدة</h3>
-        <button class="close" onclick="closeUcModal()">&times;</button>
+        <h3 id="productModalTitle"><i class="fas fa-box-open"></i> إضافة/تعديل منتج</h3>
+        <button class="close" onclick="closeProductModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="ucForm">
-          <input type="hidden" id="ucId">
+        <form id="productForm">
+          <input type="hidden" id="productId">
           <div class="form-group">
-            <label for="ucAmount">عدد الشدات:</label>
-            <input type="number" id="ucAmount" class="form-control" placeholder="مثال: 60" required>
+            <label for="productCategory">الفئة:</label>
+            <select id="productCategory" class="form-control" required onchange="toggleAmountField()">
+              <option value="">اختر الفئة</option>
+              <option value="uc">شدات (UC)</option>
+              <option value="bundle">حزمة ازدهار</option>
+            </select>
+          </div>
+          <div class="form-group" id="productNameGroup">
+            <label for="productName">اسم المنتج:</label>
+            <input type="text" id="productName" class="form-control" placeholder="مثال: 60 UC أو حزمة الازدهار الأولى" required>
+          </div>
+          <div class="form-group" id="productAmountGroup" style="display: none;">
+            <label for="productAmount">عدد الشدات (فقط لـ UC):</label>
+            <input type="number" id="productAmount" class="form-control" placeholder="مثال: 60">
           </div>
           <div class="form-group">
-            <label for="ucPrice">السعر (ج.م):</label>
-            <input type="number" step="0.01" id="ucPrice" class="form-control" placeholder="مثال: 45.00" required>
+            <label for="productPrice">السعر (ج.م):</label>
+            <input type="number" step="0.01" id="productPrice" class="form-control" placeholder="مثال: 45.00" required>
           </div>
           <div class="form-group">
-            <label for="ucImageUrl">رابط الصورة (URL):</label>
-            <input type="url" id="ucImageUrl" class="form-control" placeholder="مثال: https://example.com/uc.png" required>
-            <img id="ucImagePreview" src="" alt="معاينة الصورة" class="uc-image-preview" style="display: none; margin-top: 10px;">
+            <label for="productImageUrl">رابط الصورة (URL):</label>
+            <input type="url" id="productImageUrl" class="form-control" placeholder="مثال: https://example.com/image.png" required>
+            <img id="productImagePreview" src="" alt="معاينة الصورة" class="uc-image-preview" style="display: none; margin-top: 10px;">
           </div>
           <div class="modal-footer" style="border-top: none; padding-bottom: 0;">
-            <button type="button" class="btn btn-outline" onclick="closeUcModal()">إلغاء</button>
-            <button type="submit" class="btn btn-primary" id="saveUcBtn">حفظ</button>
+            <button type="button" class="btn btn-outline" onclick="closeProductModal()">إلغاء</button>
+            <button type="submit" class="btn btn-primary" id="saveProductBtn">حفظ</button>
           </div>
         </form>
       </div>
@@ -1241,14 +1255,14 @@
     let orders = [];
     let inquiries = [];
     let suggestions = [];
-    let ucOptions = []; // لشدات UC
+    let products = []; // تم تغيير ucOptions إلى products
 
     // تحميل البيانات عند فتح الصفحة
     document.addEventListener('DOMContentLoaded', function() {
       loadOrders();
       loadInquiries();
       loadSuggestions();
-      loadUcOptions(); // تحميل خيارات الشدات
+      loadProducts(); // تحميل المنتجات (شدات وحزم)
     });
 
     // وظائف التبويب
@@ -1668,41 +1682,43 @@
       }
     }
 
-    // --- وظائف إدارة الشدات (UC) ---
-    async function loadUcOptions() {
+    // --- وظائف إدارة المنتجات (UC & Bundles) ---
+    async function loadProducts() {
       try {
-        showLoader('#ucOptionsList');
+        showLoader('#productsList');
 
-        const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/uc-options", {
+        const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/products", {
           credentials: "include"
         });
 
-        if (!res.ok) throw new Error('فشل في جلب خيارات الشدات');
+        if (!res.ok) throw new Error('فشل في جلب المنتجات');
 
         const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'فشل في تحميل خيارات الشدات');
+        if (!data.success) throw new Error(data.message || 'فشل في تحميل المنتجات');
 
-        ucOptions = data.data || [];
-        const container = document.getElementById("ucOptionsList");
+        products = data.data || [];
+        const container = document.getElementById("productsList");
         container.innerHTML = "";
 
-        if (ucOptions.length === 0) {
-          container.innerHTML = `<tr><td colspan="4" style="text-align: center;">لا توجد شدات لعرضها. أضف شدة جديدة.</td></tr>`;
+        if (products.length === 0) {
+          container.innerHTML = `<tr><td colspan="6" style="text-align: center;">لا توجد منتجات لعرضها. أضف منتج جديد.</td></tr>`;
           return;
         }
 
-        ucOptions.forEach(uc => {
+        products.forEach(product => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${uc.uc_amount}</td>
-            <td>${uc.price} ج.م</td>
-            <td><img src="${uc.image_url}" alt="${uc.uc_amount} UC" class="uc-image-preview"></td>
+            <td>${product.name}</td>
+            <td>${product.category === 'uc' ? 'شدة' : 'حزمة ازدهار'}</td>
+            <td>${product.amount || 'N/A'}</td>
+            <td>${product.price} ج.م</td>
+            <td><img src="${product.image_url}" alt="${product.name}" class="uc-image-preview"></td>
             <td>
               <div style="display: flex; gap: 5px;">
-                <button class="btn btn-sm btn-info" onclick="editUcOption(${uc.id})">
+                <button class="btn btn-sm btn-info" onclick="editProduct(${product.id})">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteUcOption(${uc.id})">
+                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -1711,49 +1727,69 @@
           container.appendChild(row);
         });
       } catch (error) {
-        console.error("Error loading UC options:", error);
-        showError('#ucOptionsList', "حدث خطأ أثناء تحميل الشدات: " + error.message);
+        console.error("Error loading products:", error);
+        showError('#productsList', "حدث خطأ أثناء تحميل المنتجات: " + error.message);
       }
     }
 
-    function openUcModal(ucId = null) {
-      const modal = document.getElementById('ucModal');
-      const title = document.getElementById('ucModalTitle');
-      const form = document.getElementById('ucForm');
-      const ucAmountInput = document.getElementById('ucAmount');
-      const ucPriceInput = document.getElementById('ucPrice');
-      const ucImageUrlInput = document.getElementById('ucImageUrl');
-      const ucImagePreview = document.getElementById('ucImagePreview');
-      const ucIdInput = document.getElementById('ucId');
+    function openProductModal(productId = null) {
+      const modal = document.getElementById('productModal');
+      const title = document.getElementById('productModalTitle');
+      const form = document.getElementById('productForm');
+      const productCategoryInput = document.getElementById('productCategory');
+      const productNameInput = document.getElementById('productName');
+      const productAmountInput = document.getElementById('productAmount');
+      const productPriceInput = document.getElementById('productPrice');
+      const productImageUrlInput = document.getElementById('productImageUrl');
+      const productImagePreview = document.getElementById('productImagePreview');
+      const productIdInput = document.getElementById('productId');
 
       form.reset();
-      ucImagePreview.style.display = 'none';
-      ucImagePreview.src = '';
+      productImagePreview.style.display = 'none';
+      productImagePreview.src = '';
+      document.getElementById('productAmountGroup').style.display = 'none'; // إخفاء حقل الكمية افتراضياً
 
-      if (ucId) {
-        title.innerHTML = '<i class="fas fa-edit"></i> تعديل شدة';
-        const uc = ucOptions.find(item => item.id === ucId);
-        if (uc) {
-          ucIdInput.value = uc.id;
-          ucAmountInput.value = uc.uc_amount;
-          ucPriceInput.value = uc.price;
-          ucImageUrlInput.value = uc.image_url;
-          ucImagePreview.src = uc.image_url;
-          ucImagePreview.style.display = 'block';
+      if (productId) {
+        title.innerHTML = '<i class="fas fa-edit"></i> تعديل منتج';
+        const product = products.find(item => item.id === productId);
+        if (product) {
+          productIdInput.value = product.id;
+          productCategoryInput.value = product.category;
+          productNameInput.value = product.name;
+          productAmountInput.value = product.amount;
+          productPriceInput.value = product.price;
+          productImageUrlInput.value = product.image_url;
+          productImagePreview.src = product.image_url;
+          productImagePreview.style.display = 'block';
+          toggleAmountField(); // عرض/إخفاء حقل الكمية بناءً على الفئة
         }
       } else {
-        title.innerHTML = '<i class="fas fa-plus"></i> إضافة شدة جديدة';
-        ucIdInput.value = '';
+        title.innerHTML = '<i class="fas fa-plus"></i> إضافة منتج جديد';
+        productIdInput.value = '';
       }
       modal.classList.add('show');
     }
 
-    function closeUcModal() {
-      document.getElementById('ucModal').classList.remove('show');
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('show');
     }
 
-    document.getElementById('ucImageUrl').addEventListener('input', function() {
-      const imgPreview = document.getElementById('ucImagePreview');
+    function toggleAmountField() {
+      const category = document.getElementById('productCategory').value;
+      const amountGroup = document.getElementById('productAmountGroup');
+      const amountInput = document.getElementById('productAmount');
+      if (category === 'uc') {
+        amountGroup.style.display = 'block';
+        amountInput.setAttribute('required', 'required');
+      } else {
+        amountGroup.style.display = 'none';
+        amountInput.removeAttribute('required');
+        amountInput.value = ''; // مسح القيمة إذا لم تكن مطلوبة
+      }
+    }
+
+    document.getElementById('productImageUrl').addEventListener('input', function() {
+      const imgPreview = document.getElementById('productImagePreview');
       if (this.value) {
         imgPreview.src = this.value;
         imgPreview.style.display = 'block';
@@ -1763,17 +1799,24 @@
       }
     });
 
-    document.getElementById('ucForm').addEventListener('submit', async function(e) {
+    document.getElementById('productForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const ucId = document.getElementById('ucId').value;
-      const uc_amount = document.getElementById('ucAmount').value;
-      const price = document.getElementById('ucPrice').value;
-      const image_url = document.getElementById('ucImageUrl').value;
+      const productId = document.getElementById('productId').value;
+      const category = document.getElementById('productCategory').value;
+      const name = document.getElementById('productName').value;
+      const amount = category === 'uc' ? parseInt(document.getElementById('productAmount').value) : null;
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const image_url = document.getElementById('productImageUrl').value;
 
-      const method = ucId ? 'PUT' : 'POST';
-      const url = ucId ? `https://7oda-store-production.up.railway.app/api/admin/uc-options/${ucId}` : 'https://7oda-store-production.up.railway.app/api/admin/uc-options';
+      if (!name || !category || !price || !image_url || (category === 'uc' && (isNaN(amount) || amount <= 0))) {
+        showAlert('warning', 'يرجى ملء جميع الحقول المطلوبة بشكل صحيح.');
+        return;
+      }
 
-      const btn = document.getElementById('saveUcBtn');
+      const method = productId ? 'PUT' : 'POST';
+      const url = productId ? `https://7oda-store-production.up.railway.app/api/admin/products/${productId}` : 'https://7oda-store-production.up.railway.app/api/admin/products';
+
+      const btn = document.getElementById('saveProductBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> حفظ...';
 
@@ -1782,19 +1825,19 @@
           method: method,
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ uc_amount: parseInt(uc_amount), price: parseFloat(price), image_url })
+          body: JSON.stringify({ name, category, amount, price, image_url })
         });
 
         const result = await res.json();
         if (result.success) {
-          showAlert('success', `تم ${ucId ? 'تعديل' : 'إضافة'} الشدة بنجاح`);
-          closeUcModal();
-          loadUcOptions(); // إعادة تحميل القائمة
+          showAlert('success', `تم ${productId ? 'تعديل' : 'إضافة'} المنتج بنجاح`);
+          closeProductModal();
+          loadProducts(); // إعادة تحميل القائمة
         } else {
-          throw new Error(result.message || `فشل ${ucId ? 'تعديل' : 'إضافة'} الشدة`);
+          throw new Error(result.message || `فشل ${productId ? 'تعديل' : 'إضافة'} المنتج`);
         }
       } catch (error) {
-        console.error("Error saving UC option:", error);
+        console.error("Error saving product:", error);
         showAlert('danger', `حدث خطأ: ${error.message}`);
       } finally {
         btn.innerHTML = 'حفظ';
@@ -1802,30 +1845,30 @@
       }
     });
 
-    function editUcOption(id) {
-      openUcModal(id);
+    function editProduct(id) {
+      openProductModal(id);
     }
 
-    async function deleteUcOption(id) {
-      if (confirm("هل أنت متأكد من حذف هذه الشدة؟")) {
+    async function deleteProduct(id) {
+      if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
         try {
-          const res = await fetch(`https://7oda-store-production.up.railway.app/api/admin/uc-options/${id}`, {
+          const res = await fetch(`https://7oda-store-production.up.railway.app/api/admin/products/${id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
           });
 
-          if (!res.ok) throw new Error('فشل في حذف الشدة');
+          if (!res.ok) throw new Error('فشل في حذف المنتج');
 
-          showAlert('success', 'تم حذف الشدة بنجاح');
-          loadUcOptions(); // إعادة تحميل القائمة
+          showAlert('success', 'تم حذف المنتج بنجاح');
+          loadProducts(); // إعادة تحميل القائمة
         } catch (error) {
-          console.error("Error deleting UC option:", error);
-          showAlert('danger', "حدث خطأ أثناء حذف الشدة: " + error.message);
+          console.error("Error deleting product:", error);
+          showAlert('danger', "حدث خطأ أثناء حذف المنتج: " + error.message);
         }
       }
     }
-    // --- نهاية وظائف إدارة الشدات (UC) ---
+    // --- نهاية وظائف إدارة المنتجات (UC & Bundles) ---
 
     // وظائف مساعدة
     function showLoader(selector) {

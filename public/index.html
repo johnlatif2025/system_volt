@@ -1450,49 +1450,10 @@
       </section>
 
       <section class="form-section neon-border">
-        <h2><i class="fas fa-coins glow" style="color: var(--accent);"></i> اختر عدد الشدات</h2>
-        <div class="options-grid" id="ucOptions">
-          <!-- سيتم ملؤها بالبيانات من الخادم -->
-          <div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">جاري تحميل خيارات الشدات...</div>
-        </div>
-
-        <h2 style="margin-top: 30px;"><i class="fas fa-gift glow" style="color: var(--accent);"></i> حزم ازدهار</h2>
-        <div class="options-grid" id="bundleOptions">
-          <div class="option-card fire-effect" data-value="حزمة الازدهار الاولى" data-price="50">
-            <img src="https://cdn.midasbuy.com/images/FirstPurchasePack.bacd265b.jpg" class="option-img" loading="lazy">
-            <div class="option-title">حزمة الازدهار الاولى</div>
-            <div class="option-price">50 ج.م</div>
-          </div>
-
-          <div class="option-card fire-effect" data-value="حزمة الازدهار الثانية" data-price="145">
-            <img src="https://cdn.midasbuy.com/images/UpgradablePack.8b6dc3a7.jpg" class="option-img" loading="lazy">
-            <div class="option-title">حزمة الازدهار الثانية</div>
-            <div class="option-price">145 ج.م</div>
-          </div>
-
-          <div class="option-card fire-effect" data-value="حزمة الازدهار الثالثة" data-price="235">
-            <img src="https://cdn.midasbuy.com/images/MythicPack.25332821.jpg" class="option-img" loading="lazy">
-            <div class="option-title">حزمة الازدهار الثالثة</div>
-            <div class="option-price">235 ج.م</div>
-          </div>
-
-          <div class="option-card fire-effect" data-value="Prime 3 Month" data-price="135">
-            <img src="https://cdn.midasbuy.com/images/3-ar.c9a3ebd6.jpg" class="option-img" loading="lazy">
-            <div class="option-title">برايم 3 أشهر</div>
-            <div class="option-price">135 ج.م</div>
-          </div>
-
-          <div class="option-card fire-effect" data-value="Prime 6 Month" data-price="280">
-            <img src="https://cdn.midasbuy.com/images/6-ar.02ac5793.jpg" class="option-img" loading="lazy">
-            <div class="option-title">برايم 6 أشهر</div>
-            <div class="option-price">280 ج.م</div>
-          </div>
-
-          <div class="option-card fire-effect" data-value="Prime 12 Month" data-price="550">
-            <img src="https://cdn.midasbuy.com/images/12-ar.471c9625.jpg" class="option-img" loading="lazy">
-            <div class="option-title">برايم 12 شهر</div>
-            <div class="option-price">550 ج.م</div>
-          </div>
+        <h2><i class="fas fa-coins glow" style="color: var(--accent);"></i> اختر المنتج</h2>
+        <div class="options-grid" id="productOptions">
+          <!-- سيتم ملؤها بالبيانات من الخادم (شدات وحزم) -->
+          <div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">جاري تحميل المنتجات...</div>
         </div>
       </section>
     </div>
@@ -1675,77 +1636,60 @@
     }
 
     // Select options functionality
-    let selectedUC = null;
-    let selectedBundle = null;
+    let selectedProduct = null;
 
     function updateTotal() {
-      const total = (selectedUC?.dataset.price || 0) * 1 + (selectedBundle?.dataset.price || 0) * 1;
+      const total = (selectedProduct?.dataset.price || 0) * 1;
       document.getElementById('totalAmount').value = total + " ج.م";
     }
 
-    // تحميل خيارات الشدات ديناميكيًا
-    async function loadUcOptionsForClient() {
-      const ucOptionsContainer = document.getElementById('ucOptions');
-      ucOptionsContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">جاري تحميل خيارات الشدات...</div>';
+    // تحميل خيارات المنتجات (شدات وحزم) ديناميكيًا
+    async function loadProductsForClient() {
+      const productOptionsContainer = document.getElementById('productOptions');
+      productOptionsContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">جاري تحميل المنتجات...</div>';
 
       try {
-        const res = await fetch("https://7oda-store-production.up.railway.app/api/uc-options");
-        if (!res.ok) throw new Error('فشل في جلب خيارات الشدات');
+        const res = await fetch("https://7oda-store-production.up.railway.app/api/products");
+        if (!res.ok) throw new Error('فشل في جلب المنتجات');
 
         const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'فشل في تحميل خيارات الشدات');
+        if (!data.success) throw new Error(data.message || 'فشل في تحميل المنتجات');
 
-        const ucOptions = data.data || [];
-        ucOptionsContainer.innerHTML = ''; // Clear loading message
+        const products = data.data || [];
+        productOptionsContainer.innerHTML = ''; // Clear loading message
 
-        if (ucOptions.length === 0) {
-          ucOptionsContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">لا توجد شدات متاحة حاليًا.</div>';
+        if (products.length === 0) {
+          productOptionsContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7);">لا توجد منتجات متاحة حاليًا.</div>';
           return;
         }
 
-        ucOptions.forEach(uc => {
+        products.forEach(product => {
           const optionCard = document.createElement('div');
           optionCard.classList.add('option-card', 'fire-effect');
-          optionCard.dataset.value = uc.uc_amount;
-          optionCard.dataset.price = uc.price;
+          optionCard.dataset.id = product.id; // إضافة ID المنتج
+          optionCard.dataset.value = product.category === 'uc' ? product.amount : product.name; // القيمة ستكون إما عدد الشدات أو اسم الحزمة
+          optionCard.dataset.price = product.price;
+          optionCard.dataset.category = product.category; // إضافة الفئة
           optionCard.innerHTML = `
-            <img src="${uc.image_url}" class="option-img" alt="${uc.uc_amount} UC" loading="lazy">
-            <div class="option-title">${uc.uc_amount} UC</div>
-            <div class="option-price">${uc.price} ج.م</div>
+            <img src="${product.image_url}" class="option-img" alt="${product.name}" loading="lazy">
+            <div class="option-title">${product.name}</div>
+            <div class="option-price">${product.price} ج.م</div>
           `;
           optionCard.addEventListener('click', () => {
-            document.querySelectorAll('#ucOptions .option-card').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('#productOptions .option-card').forEach(o => o.classList.remove('selected'));
             optionCard.classList.add('selected');
-            selectedUC = optionCard;
-
-            document.querySelectorAll('#bundleOptions .option-card').forEach(o => o.classList.remove('selected'));
-            selectedBundle = null;
+            selectedProduct = optionCard; // تعيين المنتج المختار
 
             updateTotal();
-            createEmojiEffect(optionCard, '💎');
+            createEmojiEffect(optionCard, product.category === 'uc' ? '💎' : '🎁');
           });
-          ucOptionsContainer.appendChild(optionCard);
+          productOptionsContainer.appendChild(optionCard);
         });
       } catch (error) {
-        console.error("Error loading UC options for client:", error);
-        ucOptionsContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--danger);">حدث خطأ أثناء تحميل الشدات: ${error.message}</div>`;
+        console.error("Error loading products for client:", error);
+        productOptionsContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--danger);">حدث خطأ أثناء تحميل المنتجات: ${error.message}</div>`;
       }
     }
-
-    // عند اختيار حزمة ازدهار، إلغاء اختيار الشدات
-    document.querySelectorAll('#bundleOptions .option-card').forEach(option => {
-      option.addEventListener('click', () => {
-        document.querySelectorAll('#bundleOptions .option-card').forEach(o => o.classList.remove('selected'));
-        option.classList.add('selected');
-        selectedBundle = option;
-
-        document.querySelectorAll('#ucOptions .option-card').forEach(o => o.classList.remove('selected'));
-        selectedUC = null;
-
-        updateTotal();
-        createEmojiEffect(option, '🎁');
-      });
-    });
 
     // تأثير إيموجي عند الاختيار
     function createEmojiEffect(element, emoji) {
@@ -1788,14 +1732,8 @@
     document.getElementById('orderForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // التحقق من اختيار نوع واحد فقط
-      if (selectedUC && selectedBundle) {
-        showAlert("لا يمكن اختيار شدات وحزمة ازدهار معاً", "يرجى اختيار نوع واحد فقط", "error");
-        return;
-      }
-
-      if (!selectedUC && !selectedBundle) {
-        showAlert("خطأ في الاختيار", "يجب اختيار شدات أو حزمة ازدهار واحدة على الأقل", "error");
+      if (!selectedProduct) {
+        showAlert("خطأ في الاختيار", "يجب اختيار منتج (شدات أو حزمة ازدهار) واحد على الأقل", "error");
         return;
       }
 
@@ -1803,10 +1741,9 @@
       formData.append('name', document.getElementById('name').value);
       formData.append('playerId', document.getElementById('playerId').value);
       formData.append('email', document.getElementById('email').value);
-      formData.append('ucAmount', selectedUC ? selectedUC.dataset.value : "");
-      formData.append('bundle', selectedBundle ? selectedBundle.dataset.value : "");
-      formData.append('transactionId', document.getElementById('transactionId').value);
+      formData.append('selectedProductId', selectedProduct.dataset.id); // إرسال ID المنتج المختار
       formData.append('totalAmount', document.getElementById('totalAmount').value.replace(" ج.م", ""));
+      formData.append('transactionId', document.getElementById('transactionId').value);
 
       const screenshotInput = document.getElementById('paymentScreenshot');
       if (screenshotInput.files[0]) {
@@ -1833,10 +1770,8 @@
         if (result.success) {
           showAlert("تم إرسال الطلب بنجاح", "سيتم التواصل معك قريباً لتأكيد الطلب", "success");
           document.getElementById('orderForm').reset();
-          document.querySelectorAll('#ucOptions .option-card').forEach(o => o.classList.remove('selected'));
-          document.querySelectorAll('#bundleOptions .option-card').forEach(o => o.classList.remove('selected'));
-          selectedUC = null;
-          selectedBundle = null;
+          document.querySelectorAll('#productOptions .option-card').forEach(o => o.classList.remove('selected'));
+          selectedProduct = null;
           document.getElementById('screenshotPreview').style.display = 'none';
           updateTotal();
 
@@ -2062,7 +1997,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       createParticles();
       createFloatingEmojis();
-      loadUcOptionsForClient(); // تحميل خيارات الشدات عند تحميل الصفحة
+      loadProductsForClient(); // تحميل المنتجات عند تحميل الصفحة
     });
   </script>
 </body>
