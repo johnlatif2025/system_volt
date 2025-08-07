@@ -251,6 +251,7 @@
             <div id="passwordStrength" style="display:none; font-size:12px; margin-top:5px; color:var(--primary);">
               قوة كلمة المرور: <span id="strengthText">ضعيفة</span>
             </div>
+            <p style="color:#666;font-size:12px;margin-top:5px;">لن يتم حفظ كلمة المرور إلا في Railway Variables</p>
           </div>
           <button type="submit" class="login-btn" style="background-color: #28a745;">تأكيد التغيير</button>
         </form>
@@ -352,16 +353,16 @@
 
         const data = await res.json();
         if (data.success) {
-          alert("تم تغيير كلمة المرور بنجاح!");
+          alert("تم تغيير كلمة المرور بنجاح!\nسيتم تطبيق التغيير على Railway Variables");
           closeChangePasswordModal();
         } else {
-          let errorMsg = "فشل تغيير كلمة المرور: ";
-          if (data.message.includes("قراءة ملف الإعدادات")) {
-            errorMsg += "خطأ في ملف الإعدادات - تأكد من صلاحيات الملف";
-          } else if (data.message.includes("غير صحيحة")) {
+          let errorMsg = "حدث خطأ أثناء تغيير كلمة المرور: ";
+          if (data.message.includes("غير صحيحة")) {
             errorMsg += "بيانات الدخول غير صحيحة";
+          } else if (data.message.includes("غير مصرح")) {
+            errorMsg += "ليس لديك صلاحية التغيير";
           } else {
-            errorMsg += data.message || "خطأ غير معروف";
+            errorMsg += "تعذر الاتصال بالخادم لتحديث البيانات";
           }
           alert(errorMsg);
         }
