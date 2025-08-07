@@ -22,7 +22,7 @@ const db = new sqlite3.Database("./data.db", sqlite3.OPEN_READWRITE | sqlite3.OP
 
 // إعدادات الميدل وير
 app.use(cors({ 
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://top-store-production.up.railway.app'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://ramez-store-production.up.railway.app'],
   credentials: true 
 }));
 app.use(bodyParser.json());
@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // إعداد الجلسة
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  secret: process.env.SESSION_SECRET || 'default-secret-key', // تم التحديث لاستخدام SESSION_SECRET من .env
   resave: false,
   saveUninitialized: true,
   cookie: { 
@@ -57,6 +57,15 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+// إعداد البريد الإلكتروني مع SMTP
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER, // تم التحديث لاستخدام SMTP_USER من .env
+    pass: process.env.SMTP_PASS  // تم التحديث لاستخدام SMTP_PASS من .env
+  },
+});
 
 // إنشاء الجداول
 db.serialize(() => {
@@ -89,15 +98,6 @@ db.serialize(() => {
     message TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
-});
-
-// إعداد البريد الإلكتروني
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
 });
 
 // Routes لخدمة صفحات HTML

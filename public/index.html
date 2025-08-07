@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAMEZ STORE - شحن UC وحزم ازدهار</title>
-  <link rel="icon" href="https://i.postimg.cc/43ggCHPM/Whats-App-Image-2025-07-15-at-20-24-34-389042e3.jpg" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7ODA STORE</title>
+  <link rel="icon" href="https://i.postimg.cc/bwGMds7N/Whats-App-Image-2025-08-07-at-15-55-04-9bbe14eb.jpg" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #6C63FF;
-      --primary-dark: #564FD8;
-      --secondary: #2A2A2A;
-      --dark: #121212;
-      --darker: #0A0A0A;
-      --light: #F5F5F5;
-      --lighter: #FFFFFF;
-      --gray: #2E2E2E;
-      --success: #4CAF50;
-      --warning: #FF9800;
-      --danger: #E63946;
-      --info: #2196F3;
+      --primary: #0f0f1a;
+      --secondary: #ff3a80;
+      --accent: #00f0ff;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --success: #25D366;
+      --danger: #ff1a4f;
+      --warning: #ffcc00;
+      --neon-pink: #ff00ff;
+      --neon-blue: #00ffff;
+      --neon-purple: #9d00ff;
     }
     
     * {
@@ -31,158 +30,942 @@
     
     body {
       font-family: 'Tajawal', sans-serif;
-      background-color: var(--dark);
-      color: var(--light);
+      background-color: #000;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 58, 128, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.15) 0%, transparent 30%),
+        linear-gradient(to bottom, #000000, #0f0f1a);
+      color: #fff;
       line-height: 1.6;
-      background-image: radial-gradient(circle at 25% 25%, rgba(108, 99, 255, 0.1) 0%, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
     }
     
     /* Header Styles */
     header {
-      background-color: var(--darker);
-      padding: 15px 0;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      border-bottom: 1px solid rgba(108, 99, 255, 0.1);
+      background: linear-gradient(135deg, var(--primary), #1a1a2e);
+      padding: 20px 0;
+      box-shadow: 0 4px 30px rgba(255, 58, 128, 0.3);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 58, 128, 0.3);
     }
     
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.postimg.cc/W15J2BTn/Whats.jpg') center/cover no-repeat;
+      opacity: 0.1;
+      z-index: 1;
     }
     
     .header-content {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      position: relative;
+      z-index: 2;
+      flex-direction: column;
+      gap: 20px;
     }
     
     .logo-container {
       display: flex;
       align-items: center;
       gap: 15px;
+      transition: transform 0.3s;
+    }
+    
+    .logo-container:hover {
+      transform: scale(1.05);
     }
     
     .logo-container img {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
       object-fit: cover;
-      border: 2px solid var(--primary);
+      border: 2px solid var(--secondary);
+      box-shadow: 0 0 20px rgba(255, 58, 128, 0.5);
     }
     
     .logo-title {
-      font-size: 20px;
+      font-size: 28px;
       font-weight: bold;
-      color: var(--lighter);
-      background: linear-gradient(to right, var(--primary), #9D94FF);
+      color: var(--light);
+      background: linear-gradient(to right, var(--secondary), #ff8a00);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(255, 58, 128, 0.5);
+      position: relative;
     }
     
-    .social-header {
-      display: flex;
-      gap: 15px;
+    .logo-title::after {
+      content: '🔥';
+      position: absolute;
+      left: -25px;
+      top: -5px;
+      font-size: 20px;
+      animation: flame 1.5s infinite alternate;
     }
     
-    .social-header a {
-      color: var(--light);
-      font-size: 18px;
+    .clan-link {
+      background: linear-gradient(135deg, var(--secondary), var(--neon-pink));
+      color: #fff;
+      padding: 12px 25px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
       transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 58, 128, 0.5);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      border: none;
     }
     
-    .social-header a:hover {
-      color: var(--primary);
-      transform: translateY(-2px);
+    .clan-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--neon-pink), var(--secondary));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .clan-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 58, 128, 0.8);
+    }
+    
+    .clan-link:hover::before {
+      opacity: 1;
+    }
+    
+    .clan-link i {
+      margin-right: 8px;
+      transition: transform 0.3s;
+    }
+    
+    .clan-link:hover i {
+      transform: translateX(-3px);
     }
     
     /* Main Content */
-    main {
-      padding: 120px 0 50px;
-    }
-    
-    /* Card Styles */
-    .card {
-      background-color: var(--secondary);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      margin-bottom: 30px;
-      border: 1px solid rgba(108, 99, 255, 0.1);
-      transition: all 0.3s;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    }
-    
-    .form-title {
+    .main-title {
       text-align: center;
-      color: var(--lighter);
-      margin-bottom: 25px;
-      font-size: 24px;
+      margin: 40px 0;
       position: relative;
-      padding-bottom: 15px;
     }
     
-    .form-title:after {
+    .main-title h1 {
+      font-size: 3.2rem;
+      color: #fff;
+      margin-bottom: 15px;
+      font-weight: 900;
+      text-shadow: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .main-title h1::after {
+      content: '💥';
+      position: absolute;
+      left: -30px;
+      top: -15px;
+      font-size: 30px;
+      animation: pulse 1s infinite;
+    }
+    
+    .main-title p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.3rem;
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.5);
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
+    }
+    
+    .main-title::after {
       content: '';
       display: block;
-      width: 80px;
-      height: 3px;
-      background: linear-gradient(to right, var(--primary), #9D94FF);
-      margin: 10px auto 0;
-      border-radius: 3px;
+      width: 200px;
+      height: 4px;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      margin: 25px auto;
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--secondary);
     }
     
-    /* Form Styles */
+    /* Order Form */
+    .order-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 50px;
+      justify-content: center;
+    }
+    
+    .form-section {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(15, 15, 26, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(255, 58, 128, 0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .form-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 40px rgba(255, 58, 128, 0.5);
+    }
+    
+    .form-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      box-shadow: 0 0 10px var(--secondary);
+    }
+    
+    .form-section h2 {
+      color: var(--accent);
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 0 5px var(--accent);
+    }
+    
+    .form-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 80px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 3px;
+      box-shadow: 0 0 5px var(--accent);
+    }
+    
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      position: relative;
     }
     
     .form-group label {
       display: block;
-      margin-bottom: 8px;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
+      margin-bottom: 10px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+      font-size: 1.1rem;
     }
     
     .form-control {
       width: 100%;
-      padding: 14px 20px;
-      background-color: var(--gray);
-      border: 1px solid rgba(108, 99, 255, 0.2);
-      border-radius: 10px;
-      color: var(--light);
-      font-size: 16px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Tajawal', sans-serif;
       transition: all 0.3s;
+      font-size: 1rem;
     }
     
     .form-control:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.2);
+      background: rgba(255,255,255,0.15);
+    }
+    
+    .form-control::placeholder {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.95rem;
     }
     
     /* Options Grid */
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 15px;
-      margin: 25px 0;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      margin-top: 25px;
     }
     
     .option-card {
-      background: var(--gray);
-      border-radius: 12px;
-      padding: 20px 15px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 15px;
+      padding: 20px;
       text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+    
+    .option-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,58,128,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .option-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(255, 58, 128, 0.4);
+      border-color: rgba(255, 58, 128, 0.5);
+      background: rgba(255,255,255,0.12);
+    }
+    
+    .option-card:hover::before {
+      opacity: 1;
+    }
+    
+    .option-card.selected {
+      border-color: var(--secondary);
+      background: rgba(255, 58, 128, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(255, 58, 128, 0.5);
+    }
+    
+    .option-card.selected::before {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: var(--secondary);
+      background: rgba(0,0,0,0.7);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      z-index: 2;
+      box-shadow: 0 0 10px var(--secondary);
+    }
+    
+    .option-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      transition: transform 0.3s;
+      filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+    }
+    
+    .option-card:hover .option-img {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .option-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    
+    .option-price {
+      color: var(--secondary);
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin-top: 5px;
+      text-shadow: 0 0 5px rgba(255, 58, 128, 0.5);
+    }
+    
+    /* Payment Info */
+    .payment-info {
+      background: rgba(255, 58, 128, 0.15);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 25px 0;
+      border-right: 4px solid var(--secondary);
+      border-left: none;
+      position: relative;
+      box-shadow: 0 0 10px rgba(255, 58, 128, 0.3);
+    }
+    
+    .payment-info::before {
+      content: '\f09d';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--primary);
+      color: var(--secondary);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--secondary);
+    }
+    
+    .payment-info p {
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.9);
+      font-size: 1.1rem;
+    }
+    
+    .payment-info strong {
+      color: var(--accent);
+      font-weight: 800;
+      text-shadow: 0 0 5px var(--accent);
+    }
+    
+    /* File Upload */
+    .file-upload {
+      position: relative;
+      margin: 20px 0;
+    }
+    
+    .file-upload input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+    }
+    
+    .file-upload-label {
+      display: block;
+      padding: 25px;
+      background: rgba(255,255,255,0.1);
+      border: 2px dashed rgba(255,255,255,0.3);
+      border-radius: 15px;
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      transition: all 0.3s;
+    }
+    
+    .file-upload-label:hover {
+      border-color: var(--accent);
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+    
+    .file-upload-label i {
+      display: block;
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
+    }
+    
+    .preview-container {
+      display: none;
+      margin-top: 15px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    .preview-image {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 20px rgba(255, 58, 128, 0.3);
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--secondary), var(--neon-pink));
+      color: #fff;
+      padding: 16px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 15px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 0 20px rgba(255, 58, 128, 0.5);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--neon-pink), var(--secondary));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(255, 58, 128, 0.8);
+    }
+    
+    .btn:hover::before {
+      opacity: 1;
+    }
+    
+    .btn-whatsapp {
+      background: linear-gradient(135deg, var(--success), #128C7E);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 0 20px rgba(37, 211, 102, 0.5);
+    }
+    
+    .btn-whatsapp::before {
+      background: linear-gradient(135deg, #128C7E, var(--success));
+    }
+    
+    .btn-whatsapp:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 30px rgba(37, 211, 102, 0.8);
+    }
+    
+    /* Contact & Suggestion */
+    .contact-section {
+      background: rgba(15, 15, 26, 0.8);
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 50px;
+      box-shadow: 0 0 30px rgba(255, 58, 128, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--primary);
+      padding: 40px 0 30px;
+      margin-top: 60px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.postimg.cc/bwGMds7N/Whats-App-Image-2025-08-07-at-15-55-04-9bbe14eb.jpg') center/cover no-repeat;
+      opacity: 0.05;
+      z-index: 1;
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 25px 0;
+      justify-content: center;
+    }
+    
+    .social-link {
+      color: #fff;
+      font-size: 1.5rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .social-link i {
+      font-size: 1.4rem;
+      transition: transform 0.3s;
+    }
+    
+    .social-link:hover {
+      color: var(--secondary);
+      background: rgba(255, 58, 128, 0.2);
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px rgba(255, 58, 128, 0.3);
+    }
+    
+    .social-link:hover i {
+      transform: scale(1.2);
+    }
+    
+    .copyright {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .logo-container {
+        flex-direction: row;
+      }
+      
+      .options-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
+      }
+      
+      .main-title h1 {
+        font-size: 2.5rem;
+      }
+      
+      .main-title p {
+        font-size: 1.1rem;
+      }
+      
+      .form-section {
+        padding: 25px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .main-title h1 {
+        font-size: 2rem;
+      }
+      
+      .options-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .social-links {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+    
+    /* Animations */
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes flame {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes neonGlow {
+      0%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--secondary), 0 0 20px var(--secondary); }
+      50% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--secondary), 0 0 40px var(--secondary); }
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    .neon-text {
+      animation: neonGlow 1.5s infinite alternate;
+    }
+    
+    /* Special Button */
+    .special-btn {
+      height: 60px;
+      width: 100%;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s ease-in-out;
+      background: transparent;
+      margin-top: 20px;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .special-btn:hover {
+      box-shadow: 0 0 25px rgba(255, 58, 128, 0.5);
+    }
+
+    .special-btn.type1::after {
+      content: "تسلم يكبير 🚀";
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--neon-blue));
+      color: #000;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      transform: translateY(60px);
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease-in-out;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .special-btn.type1::before {
+      content: "ارسال الطلب 💥";
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(135deg, var(--secondary), var(--neon-pink));
+      color: #fff;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      transform: translateY(0px) scale(1);
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease-in-out;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 58, 128, 0.5);
+    }
+
+    .special-btn.type1:hover::after {
+      transform: translateY(0) scale(1);
+    }
+
+    .special-btn.type1:hover::before {
+      transform: translateY(-60px) scale(0) rotate(120deg);
+    }
+    
+    .notice-container {
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      animation: pulse 2s infinite;
+    }
+
+    .notice-text {
+      background: linear-gradient(135deg, var(--danger), #ff1a4f);
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 26, 79, 0.5);
+      max-width: 90%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .notice-text i {
+      font-size: 1.3rem;
+    }
+    
+    /* أنماط جديدة للنموذج المخفي */
+    .contact-toggle-btn {
+      background: linear-gradient(135deg, var(--secondary), var(--neon-pink));
+      color: #fff;
+      padding: 18px 35px;
+      border-radius: 50px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 0 auto;
+      max-width: 350px;
+      box-shadow: 0 0 25px rgba(255, 58, 128, 0.5);
+      border: none;
+      font-size: 1.2rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .contact-toggle-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--neon-pink), var(--secondary));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .contact-toggle-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 35px rgba(255, 58, 128, 0.8);
+    }
+    
+    .contact-toggle-btn:hover::before {
+      opacity: 1;
+    }
+
+    .contact-toggle-btn i:first-child {
+      font-size: 1.5rem;
+    }
+    
+    .contact-toggle-btn i:last-child {
+      transition: transform 0.3s;
+    }
+    
+    .contact-toggle-btn:hover i:last-child {
+      transform: translateY(5px);
+    }
+
+    /* نافذة الاختيار */
+    .contact-options-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .contact-options-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: var(--primary);
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      box-shadow: 0 0 40px rgba(255, 58, 128, 0.5);
+      transform: translateY(20px);
+      transition: transform 0.3s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .contact-options-modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .contact-option {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
       cursor: pointer;
       transition: all 0.3s;
       border: 2px solid transparent;
@@ -190,653 +973,686 @@
       overflow: hidden;
     }
     
-    .option-card:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: var(--primary);
-      transform: scaleX(0);
-      transition: transform 0.3s;
-    }
-    
-    .option-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .option-card:hover:before {
-      transform: scaleX(1);
-    }
-    
-    .option-card.selected {
-      border-color: var(--primary);
-      background: rgba(108, 99, 255, 0.1);
-    }
-    
-    .option-card.selected:before {
-      transform: scaleX(1);
-    }
-    
-    .option-card img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      margin-bottom: 15px;
-      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
-    }
-    
-    .option-card .price {
-      color: var(--primary);
-      font-weight: bold;
-      margin-top: 8px;
-      font-size: 18px;
-    }
-    
-    /* Payment Info */
-    .payment-info {
-      background: rgba(108, 99, 255, 0.1);
-      border-right: 3px solid var(--primary);
-      padding: 20px;
-      border-radius: 12px;
-      margin: 25px 0;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .payment-info:before {
+    .contact-option::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(45deg, transparent, rgba(108, 99, 255, 0.05), transparent);
-      z-index: 0;
-    }
-    
-    .payment-info p {
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .payment-info strong {
-      color: var(--primary);
-      font-size: 20px;
-      display: inline-block;
-      margin-top: 5px;
-    }
-    
-    /* File Upload */
-    .file-upload {
-      position: relative;
-      margin: 25px 0;
-    }
-    
-    .file-upload input {
-      position: absolute;
-      left: 0;
-      top: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
       opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .contact-option:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     
-    .file-upload-label {
-      display: block;
-      padding: 20px;
-      background: var(--gray);
-      border: 2px dashed rgba(108, 99, 255, 0.3);
-      border-radius: 12px;
-      text-align: center;
-      transition: all 0.3s;
-      position: relative;
+    .contact-option:hover::before {
+      opacity: 1;
     }
-    
-    .file-upload-label:hover {
-      border-color: var(--primary);
-      background: rgba(108, 99, 255, 0.1);
+
+    #inquiryOption {
+      border-color: var(--accent);
     }
-    
-    .file-upload-label i {
-      display: block;
-      font-size: 32px;
-      margin-bottom: 10px;
-      color: var(--primary);
+
+    #suggestionOption {
+      border-color: var(--success);
     }
-    
-    /* Preview */
-    .preview-container {
-      text-align: center;
-      margin: 20px 0;
-      display: none;
-    }
-    
-    .preview-image {
-      max-width: 250px;
-      max-height: 250px;
-      border-radius: 12px;
-      border: 2px solid var(--primary);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Buttons */
-    .btn {
-      display: inline-block;
-      padding: 15px 30px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: var(--lighter);
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 16px;
-      text-align: center;
-      transition: all 0.3s;
-      width: 100%;
-      box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-      transform: translateX(-100%);
+
+    .contact-option i {
+      font-size: 3rem;
       transition: transform 0.3s;
     }
     
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+    .contact-option:hover i {
+      transform: scale(1.2);
     }
-    
-    .btn:hover:after {
-      transform: translateX(0);
+
+    #inquiryOption i {
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
     }
-    
-    .btn-secondary {
-      background: var(--gray);
-      color: white;
-      box-shadow: none;
+
+    #suggestionOption i {
+      color: var(--success);
+      text-shadow: 0 0 10px var(--success);
     }
-    
-    .btn-secondary:hover {
-      background: var(--gray);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+    .contact-option span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
     }
-    
-    /* Contact Form */
-    .contact-form {
-      margin-top: 40px;
-    }
-    
-    textarea.form-control {
-      min-height: 140px;
-      resize: vertical;
-    }
-    
-    /* Social Links */
-    .social-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
-      margin: 30px 0;
-    }
-    
-    .social-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 15px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
+
+    /* النماذج المخفية */
+    .form-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--primary);
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 600px;
+      z-index: 1001;
+      box-shadow: 0 0 40px rgba(255, 58, 128, 0.5);
+      opacity: 0;
+      visibility: hidden;
       transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
-    
-    .social-link i {
-      font-size: 22px;
+
+    .form-container.active {
+      opacity: 1;
+      visibility: visible;
     }
-    
-    .social-link:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-      transform: translateX(-100%);
-      transition: transform 0.3s;
-    }
-    
-    .social-link:hover:after {
-      transform: translateX(0);
-    }
-    
-    .whatsapp-link {
-      background: rgba(37, 211, 102, 0.1);
-      color: #25D366;
-      border: 1px solid rgba(37, 211, 102, 0.3);
-    }
-    
-    .whatsapp-link:hover {
-      background: rgba(37, 211, 102, 0.2);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2);
-    }
-    
-    .telegram-link {
-      background: rgba(0, 136, 204, 0.1);
-      color: #0088cc;
-      border: 1px solid rgba(0, 136, 204, 0.3);
-    }
-    
-    .telegram-link:hover {
-      background: rgba(0, 136, 204, 0.2);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 136, 204, 0.2);
-    }
-    
-    /* Toggle Section */
-    .toggle-section {
-      margin: 30px 0;
-    }
-    
-    .toggle-header {
+
+    .form-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 20px;
-      background: var(--gray);
-      border-radius: 12px;
+      margin-bottom: 25px;
+      color: #fff;
+    }
+
+    .form-header h2 {
+      margin: 0;
+      font-size: 2rem;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 0 10px var(--secondary);
+    }
+
+    .close-form-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
       cursor: pointer;
       transition: all 0.3s;
-      border: 1px solid rgba(108, 99, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
     }
-    
-    .toggle-header:hover {
-      background: var(--gray);
-      border-color: rgba(108, 99, 255, 0.3);
+
+    .close-form-btn:hover {
+      color: #fff;
+      transform: rotate(90deg);
+      background: rgba(255, 58, 128, 0.2);
     }
-    
-    .toggle-header i {
-      transition: transform 0.3s;
-      color: var(--primary);
+
+    /* أنماط حقول الإدخال مع الأيقونات */
+    .input-with-icon {
+      position: relative;
+      margin-bottom: 25px;
     }
-    
-    .toggle-header.active i {
-      transform: rotate(180deg);
+
+    .input-with-icon i {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: var(--secondary);
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px var(--secondary);
     }
-    
-    .toggle-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease-out;
-      background: var(--gray);
-      border-radius: 0 0 12px 12px;
-      border: 1px solid rgba(108, 99, 255, 0.1);
-      border-top: none;
+
+    .input-with-icon textarea + i {
+      top: 20px;
+      right: 15px;
     }
-    
-    .toggle-content.active {
-      max-height: 1000px;
-      padding: 20px;
-    }
-    
-    /* Features Grid */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin: 40px 0;
-    }
-    
-    .feature-card {
-      background: var(--gray);
-      border-radius: 12px;
-      padding: 25px;
-      text-align: center;
+
+    .input-with-icon .form-control {
+      padding-right: 45px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
       transition: all 0.3s;
-      border: 1px solid rgba(108, 99, 255, 0.1);
+    }
+
+    .input-with-icon .form-control:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(255, 58, 128, 0.2);
+    }
+
+    .btn-inquiry {
+      background: linear-gradient(135deg, var(--accent), var(--neon-blue));
+      color: #000;
     }
     
-    .feature-card i {
-      font-size: 36px;
-      color: var(--primary);
-      margin-bottom: 15px;
+    .btn-inquiry::before {
+      background: linear-gradient(135deg, var(--neon-blue), var(--accent));
+    }
+
+    .btn-suggestion {
+      background: linear-gradient(135deg, var(--success), #128C7E);
+      color: #fff;
+    }
+    
+    .btn-suggestion::before {
+      background: linear-gradient(135deg, #128C7E, var(--success));
+    }
+
+    .btn-inquiry:hover {
+      background: #00a8d8;
+    }
+
+    .btn-suggestion:hover {
+      background: #1da851;
+    }
+
+    .hidden {
+      display: none;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: relative;
       display: inline-block;
     }
     
-    .feature-card h3 {
-      margin-bottom: 10px;
-      color: var(--lighter);
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--dark);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      right: 50%;
+      transform: translateX(50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.9rem;
+      border: 1px solid var(--secondary);
+      box-shadow: 0 0 10px var(--secondary);
     }
     
-    .feature-card p {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
     }
     
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      border-color: rgba(108, 99, 255, 0.3);
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 5px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
     }
     
-    /* Responsive */
-    @media (max-width: 768px) {
-      .options-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--secondary), var(--accent));
+      width: 0%;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px var(--secondary);
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--primary);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--secondary), var(--accent));
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(var(--accent), var(--secondary));
+    }
+    
+    /* Particle Background */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: float linear infinite;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
       }
-      
-      .header-content {
-        flex-direction: column;
-        gap: 15px;
+      50% {
+        opacity: 0.8;
       }
-      
-      .logo-container {
-        flex-direction: column;
-        text-align: center;
-      }
-      
-      main {
-        padding: 150px 0 30px;
-      }
-      
-      .card {
-        padding: 20px;
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
       }
     }
     
-    @media (max-width: 480px) {
-      .options-grid {
-        grid-template-columns: 1fr;
+    /* Neon Border Effect */
+    .neon-border {
+      position: relative;
+    }
+    
+    .neon-border::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 20px;
+      background: linear-gradient(45deg, var(--secondary), var(--accent), var(--neon-pink), var(--accent));
+      background-size: 400%;
+      z-index: -1;
+      opacity: 0;
+      transition: 0.5s;
+      animation: animate 20s linear infinite;
+    }
+    
+    .neon-border:hover::before {
+      opacity: 1;
+      filter: blur(5px);
+    }
+    
+    @keyframes animate {
+      0% {
+        background-position: 0 0;
       }
-      
-      .form-title {
-        font-size: 20px;
+      50% {
+        background-position: 300% 0;
+      }
+      100% {
+        background-position: 0 0;
       }
     }
     
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Fire Effect */
+    .fire-effect {
+      position: relative;
     }
     
-    .fade-in {
-      animation: fadeIn 0.5s ease-out;
+    .fire-effect::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 20px;
+      background: radial-gradient(ellipse at center, rgba(255,58,128,0.8) 0%, rgba(255,58,128,0) 70%);
+      filter: blur(5px);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
     
-    /* Floating Animation */
-    @keyframes floating {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0px); }
+    .fire-effect:hover::after {
+      opacity: 1;
     }
     
-    .floating {
-      animation: floating 3s ease-in-out infinite;
+    /* Glowing Text */
+    .glow {
+      text-shadow: 0 0 10px currentColor;
+    }
+    
+    /* Floating Emojis */
+    .emoji-float {
+      position: absolute;
+      font-size: 20px;
+      animation: floatUp 5s linear infinite;
+      opacity: 0;
+    }
+    
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Particle Background -->
+  <div class="particles" id="particles"></div>
+  
   <header>
-    <div class="container">
-      <div class="header-content">
-        <div class="logo-container">
-          <img src="https://i.postimg.cc/43ggCHPM/Whats-App-Image-2025-07-15-at-20-24-34-389042e3.jpg" alt="RAMEZ STORE Logo" class="floating">
-          <span class="logo-title">RAMEZ STORE</span>
-        </div>
-        
-        <div class="social-header">
-          <a href="https://wa.me/201010305639" target="_blank"><i class="fab fa-whatsapp"></i></a>
-          <a href="https://t.me/غير متاح الان" target="_blank"><i class="fab fa-telegram"></i></a>
-          <a href="https://chat.whatsapp.com/BNoNKYNIwYRACmTUhPctCa" target="_blank"><i class="fas fa-users"></i></a>
-          <a href="https://chat.whatsapp.com/BlrzKHkl3Xp1rRLnoCSQ3c" target="_blank"><i class="fas fa-users"></i></a>
-
-        </div>
+    <div class="container header-content">
+      <div class="logo-container">
+        <img src="https://i.postimg.cc/bwGMds7N/Whats-App-Image-2025-08-07-at-15-55-04-9bbe14eb.jpg" alt="7ODA STORE Logo" class="floating">
+        <span class="logo-title">7ODA STORE</span>
       </div>
+
     </div>
   </header>
-  
-  <main class="container">
-    <div class="features fade-in">
-      <div class="feature-card">
-        <i class="fas fa-bolt"></i>
-        <h3>شحن سريع</h3>
-        <p>شحن UC خلال دقائق معدودة بعد التحويل</p>
-      </div>
-      
-      <div class="feature-card">
-        <i class="fas fa-shield-alt"></i>
-        <h3>آمن تماماً</h3>
-        <p>معاملات آمنة وحماية كاملة لبياناتك</p>
-      </div>
-      
-      <div class="feature-card">
-        <i class="fas fa-headset"></i>
-        <h3>دعم فني</h3>
-        <p>دعم فني متاح على مدار الساعة</p>
-      </div>
-      
-      <div class="feature-card">
-        <i class="fas fa-tag"></i>
-        <h3>أفضل الأسعار</h3>
-        <p>أقل الأسعار مع أعلى جودة خدمة</p>
-      </div>
-    </div>
-    
-    <div class="card fade-in">
-      <h2 class="form-title">نموذج طلب الشحن</h2>
-      
-      <form id="orderForm" enctype="multipart/form-data">
-        <div class="form-group">
-          <input type="text" id="name" class="form-control" placeholder="الاسم داخل اللعبة" required>
-        </div>
-        
-        <div class="form-group">
-          <input type="text" id="playerId" class="form-control" placeholder="ID اللاعب" required>
-        </div>
-        
-        <div class="form-group">
-          <input type="email" id="email" class="form-control" placeholder="البريد الإلكتروني للتواصل" required>
-        </div>
-        
-        <h3 class="form-title">اختر عدد الشدات</h3>
-        <div class="options-grid" id="ucOptions">
-          <div class="option-card" data-value="60" data-price="45">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546007887MVeNUtB6.png" alt="60 UC">
-            <div>60 UC</div>
-            <div class="price">45 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="325" data-price="230">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" alt="325 UC">
-            <div>325 UC</div>
-            <div class="price">230 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="660" data-price="440">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" alt="660 UC">
-            <div>660 UC</div>
-            <div class="price">440 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="1800" data-price="1130">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546052747L5gSu7VB.png" alt="1800 UC">
-            <div>1800 UC</div>
-            <div class="price">1130 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="3850" data-price="2230">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546061912PLgMlY23.png" alt="3850 UC">
-            <div>3850 UC</div>
-            <div class="price">2230 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="8100" data-price="4450">
-            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546071746KqkIhrzG.png" alt="8100 UC">
-            <div>8100 UC</div>
-            <div class="price">4450 جنيه</div>
-          </div>
-        </div>
-        
-        <h3 class="form-title">أو اختر حزمة ازدهار</h3>
-        <div class="options-grid" id="bundleOptions">
-          <div class="option-card" data-value="حزمة الازدهار الاولى" data-price="50">
-            <img src="https://cdn.midasbuy.com/images/FirstPurchasePack.bacd265b.jpg" alt="حزمة الازدهار الاولى">
-            <div>حزمة الازدهار الاولى</div>
-            <div class="price">50 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="حزمة الازدهار الثانية" data-price="145">
-            <img src="https://cdn.midasbuy.com/images/UpgradablePack.8b6dc3a7.jpg" alt="حزمة الازدهار الثانية">
-            <div>حزمة الازدهار الثانية</div>
-            <div class="price">145 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="حزمة الازدهار الثالثة" data-price="235">
-            <img src="https://cdn.midasbuy.com/images/MythicPack.25332821.jpg" alt="حزمة الازدهار الثالثة">
-            <div>حزمة الازدهار الثالثة</div>
-            <div class="price">235 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="Prime 3 Month" data-price="135">
-            <img src="https://cdn.midasbuy.com/images/3-ar.c9a3ebd6.jpg" alt="Prime 3 Month">
-            <div>برايم 3 أشهر</div>
-            <div class="price">135 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="Prime 6 Month" data-price="280">
-            <img src="https://cdn.midasbuy.com/images/6-ar.02ac5793.jpg" alt="Prime 6 Month">
-            <div>برايم 6 أشهر</div>
-            <div class="price">280 جنيه</div>
-          </div>
-          
-          <div class="option-card" data-value="Prime 12 Month" data-price="550">
-            <img src="https://cdn.midasbuy.com/images/12-ar.471c9625.jpg" alt="Prime 12 Month">
-            <div>برايم 12 شهر</div>
-            <div class="price">550 جنيه</div>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <input type="text" id="transactionId" class="form-control" placeholder="رقم التحويل" required>
-        </div>
-        
-        <div class="form-group">
-          <input type="text" id="totalAmount" class="form-control" placeholder="المبلغ الإجمالي" readonly>
-        </div>
-        
-        <div class="payment-info">
-          <p>قم بالتحويل إلى هذا الرقم:</p>
-          <p><strong>01010305639</strong></p>
-          <p>ثم أرفع صورة إثبات التحويل</p>
-        </div>
-        
-        <div class="file-upload">
-          <label for="paymentScreenshot" class="file-upload-label">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>سكرين شوت التحويل</span>
-            <span>(اضغط لرفع الصورة)</span>
-          </label>
-          <input type="file" id="paymentScreenshot" name="screenshot" accept="image/*" required>
-        </div>
-        
-        <div class="preview-container" id="screenshotPreview">
-          <img class="preview-image" id="previewImage">
-        </div>
-        
-        <button type="submit" class="btn">إرسال الطلب</button>
-      </form>
-      
-      <div class="social-links">
-        <a href="https://wa.me/201010305639" class="social-link whatsapp-link">
-          <i class="fab fa-whatsapp"></i>
-          <span>كلمنا واتس اب لشحنات QR</span>
-        </a>
-        
-        <a href="https://chat.whatsapp.com/BlrzKHkl3Xp1rRLnoCSQ3c" class="social-link whatsapp-link">
-          <i class="fab fa-whatsapp"></i>
-          <span>جروب الاستور واتس</span>
-        </a>
-        
-        <a href="https://chat.whatsapp.com/BNoNKYNIwYRACmTUhPctCa" class="social-link whatsapp-link">
-          <i class="fab fa-whatsapp"></i>
-          <span>جروب الاستور واتس</span>
-        </a>
 
-        <a href="https://t.me/غير متاح الان" class="social-link telegram-link">
-          <i class="fab fa-telegram"></i>
-          <span>جروب الاستور تيليجرام</span>
+  <main class="container">
+    <div class="main-title">
+      <h1>متجر 7ODA</h1>
+      <p>أحصل على شدات ببجي بأفضل الأسعار وبأسرع وقت وأرخص سعر</p>
+    </div>
+    
+    <div class="order-container">
+      <section class="form-section neon-border">
+        <h2><i class="fas fa-shopping-cart glow" style="color: var(--accent);"></i> معلومات الطلب</h2>
+        <form id="orderForm" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="name">الاسم داخل اللعبة</label>
+            <input type="text" id="name" class="form-control" placeholder="اكتب اسمك في اللعبة" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="playerId">ID اللاعب</label>
+            <input type="text" id="playerId" class="form-control" placeholder="اكتب ID اللاعب" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">البريد الإلكتروني</label>
+            <input type="email" id="email" class="form-control" placeholder="لتواصل في حالة وجود مشكلة" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="transactionId">رقم التحويل</label>
+            <input type="text" id="transactionId" class="form-control" placeholder="رقم التليفون المحول منه" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="totalAmount">المبلغ الإجمالي</label>
+            <input type="text" id="totalAmount" class="form-control" placeholder="سيتم حسابه تلقائياً" readonly>
+          </div>
+          
+          <div class="payment-info">
+            <p><i class="fas fa-info-circle"></i> قم بالتحويل إلى هذا الرقم:</p>
+            <p><strong>01019344948</strong></p>
+            <p><i class="fas fa-camera"></i> يرجى إرسال صورة التحويل بعد الإتمام</p>
+          </div>
+          
+          <div class="form-group">
+            <label>إثبات التحويل</label>
+            <div class="file-upload">
+              <input type="file" id="paymentScreenshot" name="screenshot" accept="image/*" required>
+              <label for="paymentScreenshot" class="file-upload-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>اضغط لرفع صورة التحويل</span>
+              </label>
+            </div>
+            <div class="preview-container" id="screenshotPreview">
+              <img class="preview-image" id="previewImage">
+            </div>
+          </div>
+          
+          <button class="special-btn type1" type="submit"></button>
+        </form>
+        
+        <a href="https://wa.me/201019344948" class="btn btn-whatsapp fire-effect">
+          <i class="fab fa-whatsapp"></i>
+          كلمنا واتساب لبيع شعبية او شراء شعبية
         </a>
-      </div>
-    </div>
-    
-    <div class="card contact-form fade-in">
-      <h2 class="form-title">تواصل معنا</h2>
+        
+        <div class="notice-container">
+          <p class="notice-text">
+            <i class="fas fa-exclamation-triangle"></i> الاكونتات غير متاح الآن (بيع أو شراء)
+          </p>
+        </div>
+      </section>
       
-      <form id="contactForm">
-        <div class="form-group">
-          <input type="text" id="contactName" class="form-control" placeholder="اسمك" required>
+      <section class="form-section neon-border">
+        <h2><i class="fas fa-coins glow" style="color: var(--accent);"></i> اختر عدد الشدات</h2>
+        <div class="options-grid" id="ucOptions">
+          <div class="option-card fire-effect" data-value="60" data-price="45">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546007887MVeNUtB6.png" class="option-img" alt="60 UC" loading="lazy">
+            <div class="option-title">60 UC</div>
+            <div class="option-price">45 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="325" data-price="230">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" class="option-img" alt="325 UC" loading="lazy">
+            <div class="option-title">325 UC</div>
+            <div class="option-price">230 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="660" data-price="440">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546030876PIvqwGaa.png" class="option-img" alt="660 UC" loading="lazy">
+            <div class="option-title">660 UC</div>
+            <div class="option-price">440 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="1800" data-price="1130">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546052747L5gSu7VB.png" class="option-img" alt="1800 UC" loading="lazy">
+            <div class="option-title">1800 UC</div>
+            <div class="option-price">1130 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="3850" data-price="2230">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546061912PLgMlY23.png" class="option-img" alt="3850 UC" loading="lazy">
+            <div class="option-title">3850 UC</div>
+            <div class="option-price">2230 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="8100" data-price="4450">
+            <img src="https://cdn.midasbuy.com/images/apps/pubgm/1599546071746KqkIhrzG.png" class="option-img" alt="8100 UC" loading="lazy">
+            <div class="option-title">8100 UC</div>
+            <div class="option-price">4450 ج.م</div>
+          </div>
         </div>
         
-        <div class="form-group">
-          <input type="email" id="contactEmail" class="form-control" placeholder="بريدك الإلكتروني" required>
+        <h2 style="margin-top: 30px;"><i class="fas fa-gift glow" style="color: var(--accent);"></i> حزم ازدهار</h2>
+        <div class="options-grid" id="bundleOptions">
+          <div class="option-card fire-effect" data-value="حزمة الازدهار الاولى" data-price="50">
+            <img src="https://cdn.midasbuy.com/images/FirstPurchasePack.bacd265b.jpg" class="option-img" loading="lazy">
+            <div class="option-title">حزمة الازدهار الاولى</div>
+            <div class="option-price">50 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="حزمة الازدهار الثانية" data-price="145">
+            <img src="https://cdn.midasbuy.com/images/UpgradablePack.8b6dc3a7.jpg" class="option-img" loading="lazy">
+            <div class="option-title">حزمة الازدهار الثانية</div>
+            <div class="option-price">145 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="حزمة الازدهار الثالثة" data-price="235">
+            <img src="https://cdn.midasbuy.com/images/MythicPack.25332821.jpg" class="option-img" loading="lazy">
+            <div class="option-title">حزمة الازدهار الثالثة</div>
+            <div class="option-price">235 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="Prime 3 Month" data-price="135">
+            <img src="https://cdn.midasbuy.com/images/3-ar.c9a3ebd6.jpg" class="option-img" loading="lazy">
+            <div class="option-title">برايم 3 أشهر</div>
+            <div class="option-price">135 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="Prime 6 Month" data-price="280">
+            <img src="https://cdn.midasbuy.com/images/6-ar.02ac5793.jpg" class="option-img" loading="lazy">
+            <div class="option-title">برايم 6 أشهر</div>
+            <div class="option-price">280 ج.م</div>
+          </div>
+          
+          <div class="option-card fire-effect" data-value="Prime 12 Month" data-price="550">
+            <img src="https://cdn.midasbuy.com/images/12-ar.471c9625.jpg" class="option-img" loading="lazy">
+            <div class="option-title">برايم 12 شهر</div>
+            <div class="option-price">550 ج.م</div>
+          </div>
         </div>
-        
-        <div class="form-group">
-          <textarea id="contactMessage" class="form-control" placeholder="اكتب استفسارك هنا..." required></textarea>
-        </div>
-        
-        <button type="submit" class="btn btn-secondary">إرسال الاستفسار</button>
-      </form>
+      </section>
     </div>
     
-    <div class="toggle-section fade-in">
-      <div class="toggle-header" id="suggestionToggle">
-        <span>لديك اقتراح لتحسين الموقع؟</span>
+    <!-- قسم الاتصال والاقتراحات المعدل -->
+    <section class="contact-section neon-border">
+      <!-- زر الفتح الرئيسي -->
+      <div class="contact-toggle-btn fire-effect" id="contactToggleBtn">
+        <i class="fas fa-comments"></i>
+        <span>اتصل بنا / قدم اقتراحًا</span>
         <i class="fas fa-chevron-down"></i>
       </div>
       
-      <div class="toggle-content" id="suggestionForm">
-        <form id="suggestionFormContent">
+      <!-- نافذة الاختيار -->
+      <div class="contact-options-modal" id="contactOptionsModal">
+        <div class="modal-content">
+          <div class="contact-option" id="inquiryOption">
+            <i class="fas fa-question-circle"></i>
+            <span>استفسار</span>
+          </div>
+          <div class="contact-option" id="suggestionOption">
+            <i class="fas fa-lightbulb"></i>
+            <span>اقتراح</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- نموذج الاستفسار (مخفي في البداية) -->
+      <div class="form-container hidden" id="inquiryFormContainer">
+        <div class="form-header">
+          <h2><i class="fas fa-question-circle glow" style="color: var(--accent);"></i> استفسار</h2>
+          <button class="close-form-btn" id="closeInquiryForm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="contactForm" class="elegant-form">
           <div class="form-group">
-            <input type="text" id="suggestionName" class="form-control" placeholder="اسمك" required>
+            <div class="input-with-icon">
+              <i class="fas fa-user glow" style="color: var(--secondary);"></i>
+              <input type="text" id="contactName" class="form-control" placeholder="اسمك" required>
+            </div>
           </div>
           
           <div class="form-group">
-            <input type="text" id="suggestionContact" class="form-control" placeholder="رقم التليفون أو البريد الإلكتروني" required>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope glow" style="color: var(--secondary);"></i>
+              <input type="email" id="contactEmail" class="form-control" placeholder="بريدك الإلكتروني" required>
+            </div>
           </div>
           
           <div class="form-group">
-            <textarea id="suggestionMessage" class="form-control" placeholder="اكتب اقتراحك هنا..." required></textarea>
+            <div class="input-with-icon">
+              <i class="fas fa-comment-dots glow" style="color: var(--secondary);"></i>
+              <textarea id="contactMessage" class="form-control" rows="4" placeholder="اكتب استفسارك هنا..." required></textarea>
+            </div>
           </div>
           
-          <button type="submit" class="btn">إرسال الاقتراح</button>
+          <button type="submit" class="btn btn-inquiry fire-effect">
+            <i class="fas fa-paper-plane"></i> إرسال الاستفسار
+          </button>
         </form>
       </div>
-    </div>
+      
+      <!-- نموذج الاقتراح (مخفي في البداية) -->
+      <div class="form-container hidden" id="suggestionFormContainer">
+        <div class="form-header">
+          <h2><i class="fas fa-lightbulb glow" style="color: var(--success);"></i> اقتراح لتحسين الموقع</h2>
+          <button class="close-form-btn" id="closeSuggestionForm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="suggestionFormContent" class="elegant-form">
+          <div class="form-group">
+            <div class="input-with-icon">
+              <i class="fas fa-user glow" style="color: var(--secondary);"></i>
+              <input type="text" id="suggestionName" class="form-control" placeholder="اسمك" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="input-with-icon">
+              <i class="fas fa-phone-alt glow" style="color: var(--secondary);"></i>
+              <input type="text" id="suggestionContact" class="form-control" placeholder="رقم الهاتف أو البريد الإلكتروني" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="input-with-icon">
+              <i class="fas fa-edit glow" style="color: var(--secondary);"></i>
+              <textarea id="suggestionMessage" class="form-control" rows="4" placeholder="اكتب اقتراحك هنا..." required></textarea>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-suggestion fire-effect">
+            <i class="fas fa-lightbulb"></i> إرسال الاقتراح
+          </button>
+        </form>
+      </div>
+    </section>
   </main>
+  
+  <footer>
+    <div class="container footer-content">
+      <div class="social-links">
+        <a href="#" class="social-link fire-effect"><i class="fab fa-facebook-f"></i> غير متاح الان</a>
+        <a href="#" class="social-link fire-effect"><i class="fab fa-instagram"></i> غير متاح الان</a>
+        <a href="https://wa.me/201019344948" class="social-link fire-effect"><i class="fab fa-whatsapp"></i> غير متاح الان</a>
+        <a href="#" class="social-link fire-effect"><i class="fab fa-telegram"></i> غير متاح الان</a>
+      </div>
+      <p class="copyright">© 2025 King Esports. جميع الحقوق محفوظة</p>
+    </div>
+  </footer>
 
   <script>
-    // اختيار الشدات أو الحزم
+    // منع فتح أدوات المطور
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        alert('غير مسموح بالوصول إلى أدوات المطور');
+      }
+    });
+
+    // Select options functionality
     const ucOptions = document.querySelectorAll('#ucOptions .option-card');
     const bundleOptions = document.querySelectorAll('#bundleOptions .option-card');
     let selectedUC = null;
@@ -844,7 +1660,7 @@
 
     function updateTotal() {
       const total = (selectedUC?.dataset.price || 0) * 1 + (selectedBundle?.dataset.price || 0) * 1;
-      document.getElementById('totalAmount').value = total + " جنيه";
+      document.getElementById('totalAmount').value = total + " ج.م";
     }
 
     // عند اختيار شدات، إلغاء اختيار حزم الازدهار
@@ -877,7 +1693,7 @@
       });
     });
 
-    // عرض معاينة الصورة
+    // File upload preview
     document.getElementById('paymentScreenshot').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -890,18 +1706,18 @@
       }
     });
 
-    // إرسال الطلب
+    // Form submission
     document.getElementById('orderForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       // التحقق من اختيار نوع واحد فقط
       if (selectedUC && selectedBundle) {
-        alert("لا يمكن اختيار شدات وحزمة ازدهار معاً، يرجى اختيار نوع واحد فقط");
+        showAlert("لا يمكن اختيار شدات وحزمة ازدهار معاً", "يرجى اختيار نوع واحد فقط", "error");
         return;
       }
       
       if (!selectedUC && !selectedBundle) {
-        alert("يجب اختيار شدات أو حزمة ازدهار واحدة على الأقل");
+        showAlert("خطأ في الاختيار", "يجب اختيار شدات أو حزمة ازدهار واحدة على الأقل", "error");
         return;
       }
 
@@ -912,7 +1728,7 @@
       formData.append('ucAmount', selectedUC ? selectedUC.dataset.value : "");
       formData.append('bundle', selectedBundle ? selectedBundle.dataset.value : "");
       formData.append('transactionId', document.getElementById('transactionId').value);
-      formData.append('totalAmount', document.getElementById('totalAmount').value.replace(" جنيه", ""));
+      formData.append('totalAmount', document.getElementById('totalAmount').value.replace(" ج.م", ""));
       
       const screenshotInput = document.getElementById('paymentScreenshot');
       if (screenshotInput.files[0]) {
@@ -920,11 +1736,11 @@
       }
 
       const btn = e.target.querySelector('button');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
       btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
 
       try {
-        const response = await fetch("https://ramez-store-production.up.railway.app/api/order", {
+        const response = await fetch("https://store-king-esport-production.up.railway.app/api/order", {
           method: "POST",
           credentials: "include",
           body: formData
@@ -937,7 +1753,7 @@
         }
 
         if (result.success) {
-          alert("تم إرسال الطلب بنجاح ✅");
+          showAlert("تم إرسال الطلب بنجاح", "سيتم التواصل معك قريباً لتأكيد الطلب", "success");
           document.getElementById('orderForm').reset();
           ucOptions.forEach(o => o.classList.remove('selected'));
           bundleOptions.forEach(o => o.classList.remove('selected'));
@@ -950,14 +1766,70 @@
         }
       } catch (error) {
         console.error("Error:", error);
-        alert(`حدث خطأ: ${error.message || "فشل إرسال الطلب"}`);
+        showAlert("حدث خطأ", error.message || "فشل إرسال الطلب", "error");
       } finally {
-        btn.innerHTML = 'إرسال الطلب';
+        btn.innerHTML = '';
+        btn.classList.add('type1');
         btn.disabled = false;
       }
     });
 
-    // إرسال الاستفسار
+    // عناصر DOM للنماذج المخفية
+    const contactToggleBtn = document.getElementById('contactToggleBtn');
+    const contactOptionsModal = document.getElementById('contactOptionsModal');
+    const inquiryOption = document.getElementById('inquiryOption');
+    const suggestionOption = document.getElementById('suggestionOption');
+    const inquiryFormContainer = document.getElementById('inquiryFormContainer');
+    const suggestionFormContainer = document.getElementById('suggestionFormContainer');
+    const closeInquiryForm = document.getElementById('closeInquiryForm');
+    const closeSuggestionForm = document.getElementById('closeSuggestionForm');
+
+    // فتح نافذة الاختيار
+    contactToggleBtn.addEventListener('click', () => {
+      contactOptionsModal.classList.add('active');
+    });
+
+    // اختيار الاستفسار
+    inquiryOption.addEventListener('click', () => {
+      contactOptionsModal.classList.remove('active');
+      inquiryFormContainer.classList.remove('hidden');
+      inquiryFormContainer.classList.add('active');
+    });
+
+    // اختيار الاقتراح
+    suggestionOption.addEventListener('click', () => {
+      contactOptionsModal.classList.remove('active');
+      suggestionFormContainer.classList.remove('hidden');
+      suggestionFormContainer.classList.add('active');
+    });
+
+    // إغلاق نماذج الاستفسار والاقتراح
+    closeInquiryForm.addEventListener('click', () => {
+      inquiryFormContainer.classList.remove('active');
+    });
+
+    closeSuggestionForm.addEventListener('click', () => {
+      suggestionFormContainer.classList.remove('active');
+    });
+
+    // إغلاق النافذة عند النقر خارجها
+    contactOptionsModal.addEventListener('click', (e) => {
+      if (e.target === contactOptionsModal) {
+        contactOptionsModal.classList.remove('active');
+      }
+    });
+
+    // إغلاق النماذج عند النقر خارجها
+    window.addEventListener('click', (e) => {
+      if (e.target === inquiryFormContainer) {
+        inquiryFormContainer.classList.remove('active');
+      }
+      if (e.target === suggestionFormContainer) {
+        suggestionFormContainer.classList.remove('active');
+      }
+    });
+
+    // Contact form submission
     document.getElementById('contactForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -968,13 +1840,15 @@
       };
 
       const btn = e.target.querySelector('button');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+      btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
       btn.disabled = true;
 
       try {
-        const response = await fetch("https://ramez-store-production.up.railway.app/api/inquiry", {
+        const response = await fetch("https://store-king-esport-production.up.railway.app/api/inquiry", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json" 
+          },
           credentials: "include",
           body: JSON.stringify(contact)
         });
@@ -986,27 +1860,22 @@
         }
 
         if (result.success) {
-          alert("تم إرسال الاستفسار وسيتم الرد عبر بريدك الإلكتروني.");
+          showAlert("تم ارسال الاستفسار", "سيتم التواصل معك قريباً", "success");
           document.getElementById('contactForm').reset();
+          inquiryFormContainer.classList.remove('active');
         } else {
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
         console.error("Error:", error);
-        alert(`حدث خطأ: ${error.message || "فشل إرسال الاستفسار"}`);
+        showAlert("حدث خطأ", error.message || "فشل إرسال الاستفسار", "error");
       } finally {
-        btn.innerHTML = 'إرسال الاستفسار';
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الاستفسار';
         btn.disabled = false;
       }
     });
 
-    // تبديل قسم الاقتراحات
-    document.getElementById('suggestionToggle').addEventListener('click', function() {
-      this.classList.toggle('active');
-      document.getElementById('suggestionForm').classList.toggle('active');
-    });
-
-    // إرسال الاقتراح
+    // Suggestion form submission
     document.getElementById('suggestionFormContent').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -1017,13 +1886,15 @@
       };
 
       const btn = e.target.querySelector('button');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+      btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
       btn.disabled = true;
 
       try {
-        const response = await fetch("https://ramez-store-production.up.railway.app/api/suggestion", {
+        const response = await fetch("https://store-king-esport-production.up.railway.app/api/suggestion", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json" 
+          },
           credentials: "include",
           body: JSON.stringify(suggestion)
         });
@@ -1035,19 +1906,154 @@
         }
 
         if (result.success) {
-          alert("تم إرسال اقتراحك بنجاح، شكراً لك!");
+          showAlert("تم ارسال الاقتراح", "شكراً لك على اقتراحك، سنقوم بدراسته", "success");
           document.getElementById('suggestionFormContent').reset();
+          suggestionFormContainer.classList.remove('active');
         } else {
           throw new Error(result.message || "حدث خطأ غير معروف");
         }
       } catch (error) {
         console.error("Error:", error);
-        alert(`حدث خطأ: ${error.message || "فشل إرسال الاقتراح"}`);
+        showAlert("حدث خطأ", error.message || "فشل إرسال الاقتراح", "error");
       } finally {
-        btn.innerHTML = 'إرسال الاقتراح';
+        btn.innerHTML = '<i class="fas fa-lightbulb"></i> إرسال الاقتراح';
         btn.disabled = false;
       }
     });
+    
+    // Show custom alert
+    function showAlert(title, message, type) {
+      const alertBox = document.createElement('div');
+      alertBox.className = `custom-alert ${type}`;
+      alertBox.innerHTML = `
+        <div class="alert-header">
+          <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+          <h3>${title}</h3>
+          <button class="close-alert"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="alert-body">
+          <p>${message}</p>
+        </div>
+      `;
+      
+      document.body.appendChild(alertBox);
+      
+      // Close button
+      const closeBtn = alertBox.querySelector('.close-alert');
+      closeBtn.addEventListener('click', () => {
+        alertBox.classList.add('fade-out');
+        setTimeout(() => {
+          alertBox.remove();
+        }, 300);
+      });
+      
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        if (document.body.contains(alertBox)) {
+          alertBox.classList.add('fade-out');
+          setTimeout(() => {
+            alertBox.remove();
+          }, 300);
+        }
+      }, 5000);
+    }
+    
+    // Add custom alert styles
+    const style = document.createElement('style');
+    style.textContent = `
+      .custom-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 350px;
+        background: var(--primary);
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        border-left: 5px solid;
+        z-index: 9999;
+        overflow: hidden;
+        transform: translateX(120%);
+        animation: slideIn 0.5s forwards;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .custom-alert.success {
+        border-left-color: var(--success);
+      }
+      
+      .custom-alert.error {
+        border-left-color: var(--danger);
+      }
+      
+      .alert-header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(0,0,0,0.2);
+      }
+      
+      .alert-header h3 {
+        margin: 0;
+        flex: 1;
+        font-size: 1.2rem;
+      }
+      
+      .alert-header i {
+        font-size: 1.5rem;
+        margin-left: 15px;
+      }
+      
+      .success .alert-header i {
+        color: var(--success);
+      }
+      
+      .error .alert-header i {
+        color: var(--danger);
+      }
+      
+      .close-alert {
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.6);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+      
+      .close-alert:hover {
+        color: #fff;
+        background: rgba(255,255,255,0.1);
+      }
+      
+      .alert-body {
+        padding: 20px;
+      }
+      
+      .alert-body p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      
+      .fade-out {
+        animation: slideOut 0.5s forwards;
+      }
+      
+      @keyframes slideIn {
+        to { transform: translateX(0); }
+      }
+      
+      @keyframes slideOut {
+        from { transform: translateX(0); }
+        to { transform: translateX(120%); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
