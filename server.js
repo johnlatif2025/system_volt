@@ -22,7 +22,7 @@ const db = new sqlite3.Database("./data.db", sqlite3.OPEN_READWRITE | sqlite3.OP
 
 // إعدادات الميدل وير
 app.use(cors({ 
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://ramez-store-production.up.railway.app'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://7oda-store-production.up.railway.app'],
   credentials: true 
 }));
 app.use(bodyParser.json());
