@@ -251,7 +251,6 @@
             <div id="passwordStrength" style="display:none; font-size:12px; margin-top:5px; color:var(--primary);">
               قوة كلمة المرور: <span id="strengthText">ضعيفة</span>
             </div>
-            <p style="color:#666;font-size:12px;margin-top:5px;">لن يتم حفظ كلمة المرور إلا في Railway Variables</p>
           </div>
           <button type="submit" class="login-btn" style="background-color: #28a745;">تأكيد التغيير</button>
         </form>
@@ -353,7 +352,7 @@
 
         const data = await res.json();
         if (data.success) {
-          alert("تم تغيير كلمة المرور بنجاح!\nسيتم تطبيق التغيير على Railway Variables");
+          alert("تم تغيير كلمة المرور بنجاح!\nسيتم تطبيق التغيير على تسجيل الدخول");
           closeChangePasswordModal();
         } else {
           let errorMsg = "حدث خطأ أثناء تغيير كلمة المرور: ";
