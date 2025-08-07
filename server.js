@@ -21,9 +21,9 @@ const db = new sqlite3.Database("./data.db", sqlite3.OPEN_READWRITE | sqlite3.OP
 });
 
 // إعدادات الميدل وير
-app.use(cors({ 
+app.use(cors({
   origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://7oda-store-production.up.railway.app'],
-  credentials: true 
+  credentials: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,10 +31,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // إعداد الجلسة
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret-key', // تم التحديث لاستخدام SESSION_SECRET من .env
+  secret: process.env.SESSION_SECRET || 'default-secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { 
+  cookie: {
     secure: false,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
@@ -62,8 +62,8 @@ const upload = multer({ storage });
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.SMTP_USER, // تم التحديث لاستخدام SMTP_USER من .env
-    pass: process.env.SMTP_PASS  // تم التحديث لاستخدام SMTP_PASS من .env
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   },
 });
 
@@ -98,6 +98,14 @@ db.serialize(() => {
     message TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  // جدول جديد للشدات
+  db.run(`CREATE TABLE IF NOT EXISTS uc_options (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uc_amount INTEGER NOT NULL,
+    price REAL NOT NULL,
+    image_url TEXT
+  )`);
 });
 
 // Routes لخدمة صفحات HTML
@@ -119,16 +127,16 @@ app.get("/dashboard", (req, res) => {
 // API Routes
 app.post("/api/order", upload.single('screenshot'), (req, res) => {
   const { name, playerId, email, ucAmount, bundle, totalAmount, transactionId } = req.body;
-  
+
   if (!name || !playerId || !email || !transactionId || !totalAmount || (!ucAmount && !bundle)) {
     return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
   }
 
   const type = ucAmount ? "UC" : "Bundle";
   const screenshot = req.file ? `/uploads/${req.file.filename}` : null;
-  
+
   db.run(
-    `INSERT INTO orders (name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot) 
+    `INSERT INTO orders (name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [name, playerId, email, type, ucAmount, bundle, totalAmount, transactionId, screenshot],
     function(err) {
@@ -143,7 +151,7 @@ app.post("/api/order", upload.single('screenshot'), (req, res) => {
 
 app.post("/api/inquiry", async (req, res) => {
   const { email, message } = req.body;
-  
+
   if (!email || !message) {
     return res.status(400).json({ success: false, message: "البريد والرسالة مطلوبان" });
   }
@@ -154,7 +162,7 @@ app.post("/api/inquiry", async (req, res) => {
       [email, message],
       async function(err) {
         if (err) return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
-        
+
         await transporter.sendMail({
           from: `"فريق الدعم" <${process.env.SMTP_USER}>`,
           to: process.env.SMTP_USER,
@@ -168,7 +176,7 @@ app.post("/api/inquiry", async (req, res) => {
             </div>
           `,
         });
-        
+
         res.json({ success: true });
       }
     );
@@ -180,7 +188,7 @@ app.post("/api/inquiry", async (req, res) => {
 
 app.post("/api/suggestion", async (req, res) => {
   const { name, contact, message } = req.body;
-  
+
   if (!name || !contact || !message) {
     return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
   }
@@ -191,7 +199,7 @@ app.post("/api/suggestion", async (req, res) => {
       [name, contact, message],
       async function(err) {
         if (err) return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
-        
+
         await transporter.sendMail({
           from: `"اقتراح جديد" <${process.env.SMTP_USER}>`,
           to: process.env.SMTP_USER,
@@ -206,7 +214,7 @@ app.post("/api/suggestion", async (req, res) => {
             </div>
           `,
         });
-        
+
         res.json({ success: true });
       }
     );
@@ -237,7 +245,7 @@ app.post("/api/admin/logout", (req, res) => {
 
 app.get("/api/admin/orders", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   db.all("SELECT * FROM orders ORDER BY id DESC", (err, rows) => {
     if (err) {
       console.error(err);
@@ -249,7 +257,7 @@ app.get("/api/admin/orders", (req, res) => {
 
 app.get("/api/admin/inquiries", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   db.all("SELECT * FROM inquiries ORDER BY created_at DESC", (err, rows) => {
     if (err) {
       console.error(err);
@@ -261,7 +269,7 @@ app.get("/api/admin/inquiries", (req, res) => {
 
 app.get("/api/admin/suggestions", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   db.all("SELECT * FROM suggestions ORDER BY created_at DESC", (err, rows) => {
     if (err) {
       console.error(err);
@@ -273,7 +281,7 @@ app.get("/api/admin/suggestions", (req, res) => {
 
 app.post("/api/admin/update-status", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   const { id, status } = req.body;
   if (!id || !status) {
     return res.status(400).json({ success: false, message: "معرّف الطلب والحالة مطلوبان" });
@@ -294,7 +302,7 @@ app.post("/api/admin/update-status", (req, res) => {
 
 app.delete("/api/admin/delete-order", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   const { id } = req.body;
   if (!id) {
     return res.status(400).json({ success: false, message: "معرّف الطلب مطلوب" });
@@ -311,7 +319,7 @@ app.delete("/api/admin/delete-order", (req, res) => {
 
 app.delete("/api/admin/delete-inquiry", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   const { id } = req.body;
   if (!id) {
     return res.status(400).json({ success: false, message: "معرّف الاستفسار مطلوب" });
@@ -328,7 +336,7 @@ app.delete("/api/admin/delete-inquiry", (req, res) => {
 
 app.delete("/api/admin/delete-suggestion", (req, res) => {
   if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
-  
+
   const { id } = req.body;
   if (!id) {
     return res.status(400).json({ success: false, message: "معرّف الاقتراح مطلوب" });
@@ -408,6 +416,98 @@ app.post("/api/admin/send-message", async (req, res) => {
     res.status(500).json({ success: false, message: "فشل إرسال الرسالة" });
   }
 });
+
+// --- UC Options API Routes ---
+// Get all UC options
+app.get("/api/uc-options", (req, res) => {
+  db.all("SELECT * FROM uc_options ORDER BY uc_amount ASC", (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
+    }
+    res.json({ success: true, data: rows });
+  });
+});
+
+// Admin: Get all UC options (requires admin session)
+app.get("/api/admin/uc-options", (req, res) => {
+  if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
+
+  db.all("SELECT * FROM uc_options ORDER BY uc_amount ASC", (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "خطأ في قاعدة البيانات" });
+    }
+    res.json({ success: true, data: rows });
+  });
+});
+
+// Admin: Add a new UC option
+app.post("/api/admin/uc-options", (req, res) => {
+  if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
+
+  const { uc_amount, price, image_url } = req.body;
+  if (!uc_amount || !price || !image_url) {
+    return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
+  }
+
+  db.run(
+    "INSERT INTO uc_options (uc_amount, price, image_url) VALUES (?, ?, ?)",
+    [uc_amount, price, image_url],
+    function(err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "حدث خطأ أثناء الإضافة" });
+      }
+      res.json({ success: true, id: this.lastID });
+    }
+  );
+});
+
+// Admin: Update an existing UC option
+app.put("/api/admin/uc-options/:id", (req, res) => {
+  if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
+
+  const { id } = req.params;
+  const { uc_amount, price, image_url } = req.body;
+  if (!uc_amount || !price || !image_url) {
+    return res.status(400).json({ success: false, message: "جميع الحقول مطلوبة" });
+  }
+
+  db.run(
+    "UPDATE uc_options SET uc_amount = ?, price = ?, image_url = ? WHERE id = ?",
+    [uc_amount, price, image_url, id],
+    function(err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "حدث خطأ أثناء التحديث" });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ success: false, message: "الشدة غير موجودة" });
+      }
+      res.json({ success: true });
+    }
+  );
+});
+
+// Admin: Delete a UC option
+app.delete("/api/admin/uc-options/:id", (req, res) => {
+  if (!req.session.admin) return res.status(403).json({ success: false, message: "غير مصرح" });
+
+  const { id } = req.params;
+  db.run("DELETE FROM uc_options WHERE id = ?", [id], function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "حدث خطأ أثناء الحذف" });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ success: false, message: "الشدة غير موجودة" });
+    }
+    res.json({ success: true });
+  });
+});
+// --- End UC Options API Routes ---
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

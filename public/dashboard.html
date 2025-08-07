@@ -869,15 +869,15 @@
         width: 250px;
         transform: translateX(-250px);
       }
-      
+
       .sidebar.show {
         transform: translateX(0);
       }
-      
+
       .main-content {
         margin-right: 0;
       }
-      
+
       .menu-toggle {
         display: block;
       }
@@ -887,28 +887,28 @@
       .stats-cards {
         grid-template-columns: 1fr;
       }
-      
+
       .header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
-      
+
       .user-info {
         margin-top: 0;
       }
-      
+
       .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
-      
+
       .section-header .actions {
         width: 100%;
         flex-wrap: wrap;
       }
-      
+
       .data-table {
         display: block;
         overflow-x: auto;
@@ -933,6 +933,13 @@
       margin-left: 8px;
       vertical-align: middle;
     }
+    .uc-image-preview {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 8px;
+        object-fit: contain;
+        border: 1px solid #eee;
+    }
   </style>
 </head>
 <body>
@@ -944,7 +951,7 @@
         <h2>7ODA STORE</h2>
         <p>لوحة تحكم إدارة المتجر</p>
       </div>
-      
+
       <ul class="nav-menu">
         <li class="nav-item">
           <a href="#" class="nav-link active" onclick="openTab('ordersTab')">
@@ -970,14 +977,20 @@
             <span>الرسائل المباشرة</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link" onclick="openTab('ucManagementTab')">
+            <i class="fas fa-coins"></i>
+            <span>إدارة الشدات</span>
+          </a>
+        </li>
       </ul>
-      
+
       <button class="logout-btn" onclick="logout()">
         <i class="fas fa-sign-out-alt"></i>
         <span>تسجيل الخروج</span>
       </button>
     </div>
-    
+
     <!-- المحتوى الرئيسي -->
     <div class="main-content">
       <div class="header">
@@ -987,7 +1000,7 @@
           <img src="https://i.postimg.cc/bwGMds7N/Whats-App-Image-2025-08-07-at-15-55-04-9bbe14eb.jpg" alt="User Avatar">
         </div>
       </div>
-      
+
       <!-- بطاقات الإحصائيات -->
       <div class="stats-cards">
         <div class="stat-card orders">
@@ -995,20 +1008,20 @@
           <div class="value" id="ordersCount">0</div>
           <div class="change positive"><i class="fas fa-arrow-up"></i> 12% عن الشهر الماضي</div>
         </div>
-        
+
         <div class="stat-card inquiries">
           <h3><i class="fas fa-question-circle"></i> الاستفسارات</h3>
           <div class="value" id="inquiriesCount">0</div>
           <div class="change negative"><i class="fas fa-arrow-down"></i> 5% عن الشهر الماضي</div>
         </div>
-        
+
         <div class="stat-card suggestions">
           <h3><i class="fas fa-lightbulb"></i> الاقتراحات</h3>
           <div class="value" id="suggestionsCount">0</div>
           <div class="change positive"><i class="fas fa-arrow-up"></i> 8% عن الشهر الماضي</div>
         </div>
       </div>
-      
+
       <!-- قسم الطلبات -->
       <div id="ordersTab" class="section tab-content active">
         <div class="section-header">
@@ -1022,7 +1035,7 @@
             </button>
           </div>
         </div>
-        
+
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -1042,7 +1055,7 @@
           </table>
         </div>
       </div>
-      
+
       <!-- قسم الاستفسارات -->
       <div id="inquiriesTab" class="section tab-content">
         <div class="section-header">
@@ -1053,7 +1066,7 @@
             </button>
           </div>
         </div>
-        
+
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -1071,7 +1084,7 @@
           </table>
         </div>
       </div>
-      
+
       <!-- قسم الاقتراحات -->
       <div id="suggestionsTab" class="section tab-content">
         <div class="section-header">
@@ -1082,7 +1095,7 @@
             </button>
           </div>
         </div>
-        
+
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -1100,13 +1113,13 @@
           </table>
         </div>
       </div>
-      
+
       <!-- قسم الرسائل المباشرة -->
       <div id="messagesTab" class="section tab-content">
         <div class="section-header">
           <h2><i class="fas fa-envelope"></i> إرسال رسالة مباشرة</h2>
         </div>
-        
+
         <div class="message-form">
           <div class="form-group">
             <label for="clientEmail">بريد العميل:</label>
@@ -1125,9 +1138,37 @@
           </button>
         </div>
       </div>
+
+      <!-- قسم إدارة الشدات (UC) -->
+      <div id="ucManagementTab" class="section tab-content">
+        <div class="section-header">
+          <h2><i class="fas fa-coins"></i> إدارة الشدات (UC)</h2>
+          <div class="actions">
+            <button class="btn btn-success" onclick="openUcModal()">
+              <i class="fas fa-plus"></i> إضافة شدة جديدة
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الشدات</th>
+                <th>السعر (ج.م)</th>
+                <th>الصورة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="ucOptionsList">
+              <!-- سيتم ملؤها بالبيانات -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
-  
+
   <!-- مودال الرد -->
   <div id="replyModal" class="modal">
     <div class="modal-content">
@@ -1151,12 +1192,44 @@
       </div>
     </div>
   </div>
-  
+
   <!-- مودال معاينة الصورة -->
   <div id="imageModal" class="image-modal">
     <div class="image-modal-content">
       <button class="close-image-modal" onclick="closeImageModal()">&times;</button>
       <img id="modalImage" src="" alt="معاينة الصورة">
+    </div>
+  </div>
+
+  <!-- مودال إضافة/تعديل الشدات -->
+  <div id="ucModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="ucModalTitle"><i class="fas fa-coins"></i> إضافة/تعديل شدة</h3>
+        <button class="close" onclick="closeUcModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="ucForm">
+          <input type="hidden" id="ucId">
+          <div class="form-group">
+            <label for="ucAmount">عدد الشدات:</label>
+            <input type="number" id="ucAmount" class="form-control" placeholder="مثال: 60" required>
+          </div>
+          <div class="form-group">
+            <label for="ucPrice">السعر (ج.م):</label>
+            <input type="number" step="0.01" id="ucPrice" class="form-control" placeholder="مثال: 45.00" required>
+          </div>
+          <div class="form-group">
+            <label for="ucImageUrl">رابط الصورة (URL):</label>
+            <input type="url" id="ucImageUrl" class="form-control" placeholder="مثال: https://example.com/uc.png" required>
+            <img id="ucImagePreview" src="" alt="معاينة الصورة" class="uc-image-preview" style="display: none; margin-top: 10px;">
+          </div>
+          <div class="modal-footer" style="border-top: none; padding-bottom: 0;">
+            <button type="button" class="btn btn-outline" onclick="closeUcModal()">إلغاء</button>
+            <button type="submit" class="btn btn-primary" id="saveUcBtn">حفظ</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -1168,12 +1241,14 @@
     let orders = [];
     let inquiries = [];
     let suggestions = [];
+    let ucOptions = []; // لشدات UC
 
     // تحميل البيانات عند فتح الصفحة
     document.addEventListener('DOMContentLoaded', function() {
       loadOrders();
       loadInquiries();
       loadSuggestions();
+      loadUcOptions(); // تحميل خيارات الشدات
     });
 
     // وظائف التبويب
@@ -1181,11 +1256,11 @@
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
-      
+
       document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
       });
-      
+
       document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
     }
@@ -1194,19 +1269,19 @@
     async function loadOrders() {
       try {
         showLoader('#ordersList');
-        
+
         const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/orders", {
           credentials: "include"
         });
-        
+
         if (!res.ok) throw new Error('فشل في جلب الطلبات');
-        
+
         const data = await res.json();
         if (!data.success) throw new Error(data.message || 'فشل في تحميل الطلبات');
-        
+
         orders = data.data || [];
         document.getElementById('ordersCount').textContent = orders.length;
-        
+
         const container = document.getElementById("ordersList");
         container.innerHTML = "";
 
@@ -1237,14 +1312,14 @@
             </td>
             <td>
               ${order.screenshot ? `
-                <img src="${order.screenshot}" 
+                <img src="${order.screenshot}"
                      onclick="openImageModal('${order.screenshot}')"
                      class="screenshot-preview">
               ` : 'لا يوجد'}
             </td>
             <td>
               <div style="display: flex; gap: 5px;">
-                <button class="btn btn-sm ${order.status === 'تم الدفع' ? 'btn-warning' : 'btn-success'}" 
+                <button class="btn btn-sm ${order.status === 'تم الدفع' ? 'btn-warning' : 'btn-success'}"
                         onclick="updateStatus(${order.id}, '${order.status === 'تم الدفع' ? 'لم يتم الدفع' : 'تم الدفع'}')">
                   <i class="fas ${order.status === 'تم الدفع' ? 'fa-times' : 'fa-check'}"></i>
                 </button>
@@ -1277,19 +1352,19 @@
     async function loadInquiries() {
       try {
         showLoader('#inquiriesList');
-        
+
         const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/inquiries", {
           credentials: "include"
         });
-        
+
         if (!res.ok) throw new Error('فشل في جلب الاستفسارات');
-        
+
         const data = await res.json();
         if (!data.success) throw new Error(data.message || 'فشل في تحميل الاستفسارات');
-        
+
         inquiries = data.data || [];
         document.getElementById('inquiriesCount').textContent = inquiries.length;
-        
+
         const container = document.getElementById("inquiriesList");
         container.innerHTML = "";
 
@@ -1315,7 +1390,7 @@
             </td>
             <td>
               <div style="display: flex; gap: 5px;">
-                <button class="btn btn-sm btn-info" 
+                <button class="btn btn-sm btn-info"
                         onclick="openReplyModal(${inquiry.id}, '${inquiry.email.replace(/'/g, "\\'")}', '${inquiry.message.replace(/'/g, "\\'")}')">
                   <i class="fas fa-reply"></i>
                 </button>
@@ -1337,19 +1412,19 @@
     async function loadSuggestions() {
       try {
         showLoader('#suggestionsList');
-        
+
         const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/suggestions", {
           credentials: "include"
         });
-        
+
         if (!res.ok) throw new Error('فشل في جلب الاقتراحات');
-        
+
         const data = await res.json();
         if (!data.success) throw new Error(data.message || 'فشل في تحميل الاقتراحات');
-        
+
         suggestions = data.data || [];
         document.getElementById('suggestionsCount').textContent = suggestions.length;
-        
+
         const container = document.getElementById("suggestionsList");
         container.innerHTML = "";
 
@@ -1371,7 +1446,7 @@
             <td>${suggestion.message.length > 50 ? suggestion.message.substring(0, 50) + '...' : suggestion.message}</td>
             <td>
               <div style="display: flex; gap: 5px;">
-                <button class="btn btn-sm btn-primary" 
+                <button class="btn btn-sm btn-primary"
                         onclick="contactSuggestion('${suggestion.contact.replace(/'/g, "\\'")}')">
                   <i class="fas fa-envelope"></i>
                 </button>
@@ -1407,9 +1482,9 @@
             credentials: "include",
             body: JSON.stringify({ id })
           });
-          
+
           if (!res.ok) throw new Error('فشل في حذف الاقتراح');
-          
+
           showAlert('success', 'تم حذف الاقتراح بنجاح');
           loadSuggestions();
         } catch (error) {
@@ -1424,7 +1499,7 @@
       currentInquiryId = id;
       currentInquiryEmail = email;
       currentInquiryMessage = message;
-      
+
       document.getElementById("originalMessage").innerHTML = `
         <i class="fas fa-info-circle"></i>
         <strong>الرسالة الأصلية من ${email}:</strong><br>
@@ -1521,9 +1596,9 @@
           credentials: "include",
           body: JSON.stringify({ id, status })
         });
-        
+
         if (!res.ok) throw new Error('فشل في تحديث الحالة');
-        
+
         showAlert('success', 'تم تحديث حالة الطلب بنجاح');
         loadOrders();
       } catch (error) {
@@ -1542,9 +1617,9 @@
             credentials: "include",
             body: JSON.stringify({ id })
           });
-          
+
           if (!res.ok) throw new Error('فشل في حذف الطلب');
-          
+
           showAlert('success', 'تم حذف الطلب بنجاح');
           loadOrders();
         } catch (error) {
@@ -1564,9 +1639,9 @@
             credentials: "include",
             body: JSON.stringify({ id })
           });
-          
+
           if (!res.ok) throw new Error('فشل في حذف الاستفسار');
-          
+
           showAlert('success', 'تم حذف الاستفسار بنجاح');
           loadInquiries();
         } catch (error) {
@@ -1579,13 +1654,13 @@
     // تسجيل الخروج
     async function logout() {
       try {
-        const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/logout", { 
+        const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/logout", {
           method: "POST",
           credentials: "include"
         });
-        
+
         if (!res.ok) throw new Error('فشل في تسجيل الخروج');
-        
+
         window.location.href = "login.html";
       } catch (error) {
         console.error("Error logging out:", error);
@@ -1593,13 +1668,173 @@
       }
     }
 
+    // --- وظائف إدارة الشدات (UC) ---
+    async function loadUcOptions() {
+      try {
+        showLoader('#ucOptionsList');
+
+        const res = await fetch("https://7oda-store-production.up.railway.app/api/admin/uc-options", {
+          credentials: "include"
+        });
+
+        if (!res.ok) throw new Error('فشل في جلب خيارات الشدات');
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'فشل في تحميل خيارات الشدات');
+
+        ucOptions = data.data || [];
+        const container = document.getElementById("ucOptionsList");
+        container.innerHTML = "";
+
+        if (ucOptions.length === 0) {
+          container.innerHTML = `<tr><td colspan="4" style="text-align: center;">لا توجد شدات لعرضها. أضف شدة جديدة.</td></tr>`;
+          return;
+        }
+
+        ucOptions.forEach(uc => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${uc.uc_amount}</td>
+            <td>${uc.price} ج.م</td>
+            <td><img src="${uc.image_url}" alt="${uc.uc_amount} UC" class="uc-image-preview"></td>
+            <td>
+              <div style="display: flex; gap: 5px;">
+                <button class="btn btn-sm btn-info" onclick="editUcOption(${uc.id})">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteUcOption(${uc.id})">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          container.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error loading UC options:", error);
+        showError('#ucOptionsList', "حدث خطأ أثناء تحميل الشدات: " + error.message);
+      }
+    }
+
+    function openUcModal(ucId = null) {
+      const modal = document.getElementById('ucModal');
+      const title = document.getElementById('ucModalTitle');
+      const form = document.getElementById('ucForm');
+      const ucAmountInput = document.getElementById('ucAmount');
+      const ucPriceInput = document.getElementById('ucPrice');
+      const ucImageUrlInput = document.getElementById('ucImageUrl');
+      const ucImagePreview = document.getElementById('ucImagePreview');
+      const ucIdInput = document.getElementById('ucId');
+
+      form.reset();
+      ucImagePreview.style.display = 'none';
+      ucImagePreview.src = '';
+
+      if (ucId) {
+        title.innerHTML = '<i class="fas fa-edit"></i> تعديل شدة';
+        const uc = ucOptions.find(item => item.id === ucId);
+        if (uc) {
+          ucIdInput.value = uc.id;
+          ucAmountInput.value = uc.uc_amount;
+          ucPriceInput.value = uc.price;
+          ucImageUrlInput.value = uc.image_url;
+          ucImagePreview.src = uc.image_url;
+          ucImagePreview.style.display = 'block';
+        }
+      } else {
+        title.innerHTML = '<i class="fas fa-plus"></i> إضافة شدة جديدة';
+        ucIdInput.value = '';
+      }
+      modal.classList.add('show');
+    }
+
+    function closeUcModal() {
+      document.getElementById('ucModal').classList.remove('show');
+    }
+
+    document.getElementById('ucImageUrl').addEventListener('input', function() {
+      const imgPreview = document.getElementById('ucImagePreview');
+      if (this.value) {
+        imgPreview.src = this.value;
+        imgPreview.style.display = 'block';
+      } else {
+        imgPreview.style.display = 'none';
+        imgPreview.src = '';
+      }
+    });
+
+    document.getElementById('ucForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const ucId = document.getElementById('ucId').value;
+      const uc_amount = document.getElementById('ucAmount').value;
+      const price = document.getElementById('ucPrice').value;
+      const image_url = document.getElementById('ucImageUrl').value;
+
+      const method = ucId ? 'PUT' : 'POST';
+      const url = ucId ? `https://7oda-store-production.up.railway.app/api/admin/uc-options/${ucId}` : 'https://7oda-store-production.up.railway.app/api/admin/uc-options';
+
+      const btn = document.getElementById('saveUcBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> حفظ...';
+
+      try {
+        const res = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ uc_amount: parseInt(uc_amount), price: parseFloat(price), image_url })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          showAlert('success', `تم ${ucId ? 'تعديل' : 'إضافة'} الشدة بنجاح`);
+          closeUcModal();
+          loadUcOptions(); // إعادة تحميل القائمة
+        } else {
+          throw new Error(result.message || `فشل ${ucId ? 'تعديل' : 'إضافة'} الشدة`);
+        }
+      } catch (error) {
+        console.error("Error saving UC option:", error);
+        showAlert('danger', `حدث خطأ: ${error.message}`);
+      } finally {
+        btn.innerHTML = 'حفظ';
+        btn.disabled = false;
+      }
+    });
+
+    function editUcOption(id) {
+      openUcModal(id);
+    }
+
+    async function deleteUcOption(id) {
+      if (confirm("هل أنت متأكد من حذف هذه الشدة؟")) {
+        try {
+          const res = await fetch(`https://7oda-store-production.up.railway.app/api/admin/uc-options/${id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
+          });
+
+          if (!res.ok) throw new Error('فشل في حذف الشدة');
+
+          showAlert('success', 'تم حذف الشدة بنجاح');
+          loadUcOptions(); // إعادة تحميل القائمة
+        } catch (error) {
+          console.error("Error deleting UC option:", error);
+          showAlert('danger', "حدث خطأ أثناء حذف الشدة: " + error.message);
+        }
+      }
+    }
+    // --- نهاية وظائف إدارة الشدات (UC) ---
+
     // وظائف مساعدة
     function showLoader(selector) {
       const container = document.querySelector(selector);
       if (container) {
+        const colspan = container.closest('table').querySelector('thead tr').children.length;
         container.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align: center; padding: 40px;">
+            <td colspan="${colspan}" style="text-align: center; padding: 40px;">
               <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
               <p style="margin-top: 15px; color: #666;">جاري التحميل...</p>
             </td>
@@ -1611,9 +1846,10 @@
     function showError(selector, message) {
       const container = document.querySelector(selector);
       if (container) {
+        const colspan = container.closest('table').querySelector('thead tr').children.length;
         container.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align: center; padding: 30px; color: var(--danger);">
+            <td colspan="${colspan}" style="text-align: center; padding: 30px; color: var(--danger);">
               <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px; color: var(--danger);"></i>
               <p style="font-weight: 600;">${message}</p>
               <button class="btn btn-outline" onclick="location.reload()" style="margin-top: 15px;">
@@ -1632,11 +1868,11 @@
         <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'danger' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
         ${message}
       `;
-      
-      const header = document.querySelector('.section-header');
-      if (header) {
-        header.parentNode.insertBefore(alert, header.nextSibling);
-        
+
+      const mainContent = document.querySelector('.main-content');
+      if (mainContent) {
+        mainContent.insertBefore(alert, mainContent.firstChild);
+
         setTimeout(() => {
           alert.style.opacity = '0';
           setTimeout(() => alert.remove(), 300);
