@@ -127,9 +127,10 @@
       }
     }
 
-    /* أنماط المودال */
+    /* أنماط المودال - تنسيقات مقتبسة من نموذج تسجيل الدخول */
     .modal {
-      display: none; /* مخفي افتراضياً */
+      display: none;
+      backdrop-filter: blur(10px);
       position: fixed; /* يبقى في مكانه حتى عند التمرير */
       z-index: 1000; /* فوق كل شيء آخر */
       left: 0;
@@ -246,7 +247,10 @@
           </div>
           <div class="input-group">
             <i class="fas fa-key"></i>
-            <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة" required>
+            <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة (8 أحرف على الأقل)" required>
+            <div id="passwordStrength" style="display:none; font-size:12px; margin-top:5px; color:var(--primary);">
+              قوة كلمة المرور: <span id="strengthText">ضعيفة</span>
+            </div>
           </div>
           <button type="submit" class="login-btn" style="background-color: #28a745;">تأكيد التغيير</button>
         </form>
@@ -297,6 +301,36 @@
       document.getElementById('changePasswordForm').reset(); // مسح الحقول عند الإغلاق
     }
 
+    // متابعة قوة كلمة المرور
+    document.getElementById('newPassword').addEventListener('input', function() {
+      const strengthBar = document.getElementById('passwordStrength');
+      const strengthText = document.getElementById('strengthText');
+      const password = this.value;
+      
+      if(password.length > 0) {
+        strengthBar.style.display = 'block';
+        let strength = 0;
+        
+        if(password.length > 7) strength++;
+        if(password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength++;
+        if(password.match(/([0-9])/)) strength++;
+        if(password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength++;
+        
+        if(strength < 2) {
+          strengthText.textContent = 'ضعيفة';
+          strengthText.style.color = '#E63946';
+        } else if(strength === 2) {
+          strengthText.textContent = 'متوسطة';
+          strengthText.style.color = '#FF9F1C';
+        } else {
+          strengthText.textContent = 'قوية';
+          strengthText.style.color = '#28a745';
+        }
+      } else {
+        strengthBar.style.display = 'none';
+      }
+    });
+
     // معالجة نموذج تغيير كلمة المرور
     document.getElementById("changePasswordForm").addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -321,7 +355,15 @@
           alert("تم تغيير كلمة المرور بنجاح!");
           closeChangePasswordModal();
         } else {
-          alert("فشل تغيير كلمة المرور: " + (data.message || "بيانات غير صحيحة أو خطأ غير معروف"));
+          let errorMsg = "فشل تغيير كلمة المرور: ";
+          if (data.message.includes("قراءة ملف الإعدادات")) {
+            errorMsg += "خطأ في ملف الإعدادات - تأكد من صلاحيات الملف";
+          } else if (data.message.includes("غير صحيحة")) {
+            errorMsg += "بيانات الدخول غير صحيحة";
+          } else {
+            errorMsg += data.message || "خطأ غير معروف";
+          }
+          alert(errorMsg);
         }
       } catch (error) {
         console.error("Change password error:", error);
