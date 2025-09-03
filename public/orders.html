@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة طلب</title>
+  <style>
+    body { 
+      font-family: Tahoma, Arial; 
+      direction: rtl; 
+      background: #f4f6f9; 
+      text-align: center; 
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+      transition: 0.2s;
+    }
+    input:focus, textarea:focus {
+      border-color: #007bff;
+      outline: none;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    }
+    textarea {
+      grid-column: span 2;
+      resize: none;
+      min-height: 80px;
+    }
+    button {
+      grid-column: span 2;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #fff;
+      background: linear-gradient(90deg,#28a745,#218838);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>إضافة طلب جديد</h2>
+    <div class="grid">
+      <input type="text" id="fullName" placeholder="الاسم الثلاثي">
+      <input type="text" id="phone1" placeholder="رقم الهاتف الأول">
+      <input type="text" id="phone2" placeholder="رقم الهاتف الثاني">
+      <input type="text" id="address" placeholder="العنوان بالتفصيل">
+      <input type="number" id="pieces" placeholder="عدد القطع">
+      <input type="text" id="size" placeholder="المقاس">
+      <input type="text" id="colors" placeholder="الألوان">
+      <input type="number" id="priceNoShip" placeholder="السعر بدون شحن">
+      <input type="number" id="shipping" placeholder="مصاريف الشحن">
+      <input type="number" id="priceTotal" placeholder="سعر البيع شامل العمولة">
+      <input type="number" id="commission" placeholder="العمولة">
+      <textarea id="note" placeholder="ملحوظة (ميعاد/مكان الاستلام)"></textarea>
+      <button onclick="addOrder()">📦 إرسال الطلب</button>
+    </div>
+  </div>
+
+  <script>
+    async function addOrder(){
+      const token=localStorage.getItem("token"); 
+      if(!token){alert("سجّل دخول أولاً");return;}
+      const order={
+        fullName:fullName.value,
+        phone1:phone1.value,
+        phone2:phone2.value,
+        address:address.value,
+        pieces:pieces.value,
+        size:size.value,
+        colors:colors.value,
+        priceNoShip:priceNoShip.value,
+        shipping:shipping.value,
+        priceTotal:priceTotal.value,
+        commission:commission.value,
+        note:note.value
+      };
+      const res=await fetch("/api/orders",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+        body:JSON.stringify(order)
+      });
+      const data=await res.json(); 
+      alert(data.message||data.error);
+    }
+  </script>
+</body>
+</html>

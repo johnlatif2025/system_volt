@@ -1,47 +1,31 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>دخول - Mahmod Store</title>
+  <meta charset="UTF-8">
+  <title>دخول المدير</title>
   <style>
-    :root{--bg:#f3f4f6;--card:#fff;--accent:#0f172a;--muted:#6b7280}
-    body{font-family:system-ui,Segoe UI,Arial;background:var(--bg);margin:0;padding:2rem}
-    .wrap{max-width:420px;margin:4rem auto;background:var(--card);padding:1.5rem;border-radius:12px;box-shadow:0 8px 24px rgba(2,6,23,.07)}
-    h1{margin:0 0 1rem;font-size:1.25rem}
-    label{display:block;margin:.4rem 0 .2rem;color:var(--muted)}
-    input{width:100%;padding:.65rem;border:1px solid #e6e9ee;border-radius:8px}
-    button{width:100%;padding:.75rem;border:none;border-radius:8px;background:var(--accent);color:#fff;margin-top:1rem;cursor:pointer}
-    .muted{color:var(--muted);font-size:.9rem;text-align:center;margin-top:.6rem}
+    body { font-family: Tahoma, Arial; direction: rtl; background:#f4f6f9; text-align:center; }
+    .box { margin: 30px auto; width: 320px; padding:20px; background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    input { width:90%; margin:8px 0; padding:10px; border:1px solid #ccc; border-radius:6px; }
+    button { width:95%; margin-top:10px; padding:10px; border:none; border-radius:6px; font-size:15px; color:#fff; background:linear-gradient(90deg,#6f42c1,#563d7c); cursor:pointer; }
+    button:hover { opacity:0.9; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>تسجيل دخول</h1>
-    <form id="form">
-      <label>اسم المستخدم</label>
-      <input id="username" required placeholder="اسم المستخدم" />
-      <label>كلمة المرور</label>
-      <input id="password" type="password" required placeholder="كلمة المرور" />
-      <button>دخول</button>
-    </form>
-    <div class="muted">لو لم يكن لديك حساب، <a href="/index.html">أنشئ حساب</a>.</div>
+  <h2 style="color:#333;">لوحة المدير</h2>
+  <div class="box">
+    <input type="text" id="username" placeholder="اسم المستخدم">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button onclick="loginAdmin()">دخول</button>
   </div>
   <script>
-    const form = document.getElementById('form');
-    form.onsubmit = async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      try {
-        const res = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, password }) });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'خطأ');
-        window.location.href = '/dashboard.html';
-      } catch (err) {
-        alert(err.message);
-      }
-    };
+    async function loginAdmin(){
+      const username=document.getElementById("username").value;
+      const password=document.getElementById("password").value;
+      const res=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
+      const data=await res.json();
+      if(data.token&&data.role==="admin"){localStorage.setItem("token",data.token);window.location="dashboard.html";} else alert("غير مصرح لك");
+    }
   </script>
 </body>
 </html>

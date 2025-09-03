@@ -1,154 +1,56 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>لوحة التحكم - Mahmod Store</title>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم</title>
   <style>
-    :root{--bg:#f8fafc;--card:#fff;--accent:#0f172a;--muted:#6b7280;--success:#10b981;--danger:#ef4444}
-    body{font-family:system-ui,Segoe UI,Arial;background:var(--bg);margin:0;padding:2rem}
-    .container{max-width:1000px;margin:1rem auto;display:grid;grid-template-columns:1fr 380px;gap:1rem;align-items:start}
-    .card{background:var(--card);padding:1rem;border-radius:12px;box-shadow:0 8px 28px rgba(2,6,23,.06)}
-    h1{margin:0 0 .5rem}
-    label{display:block;margin:.5rem 0 .2rem;color:var(--muted)}
-    input,textarea,select{width:100%;padding:.6rem;border:1px solid #e6e9ee;border-radius:8px}
-    button{padding:.6rem .9rem;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer}
-    .small{color:var(--muted);font-size:.9rem}
-    table{width:100%;border-collapse:collapse;margin-top:.5rem}
-    th,td{padding:.5rem;border-bottom:1px solid #f1f5f9;text-align:right}
-    .row{display:flex;gap:.5rem;align-items:center}
-    .status{padding:.25rem .5rem;border-radius:999px;font-size:.85rem}
+    body { font-family: Tahoma, Arial; direction: rtl; background:#f4f6f9; padding:20px; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    th,td { border:1px solid #ddd; padding:10px; text-align:center; font-size:14px; }
+    th { background:#007bff; color:#fff; }
+    tr:nth-child(even){ background:#f9f9f9; }
+    button { margin:2px; padding:6px 12px; border:none; border-radius:6px; color:#fff; cursor:pointer; }
+    .ok { background:#28a745; }
+    .no { background:#dc3545; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card" id="main">
-      <h1 id="title">جارٍ التحميل...</h1>
-      <div id="content"></div>
-    </div>
-    <div class="card">
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <div>
-          <div id="me" class="small">...</div>
-          <div class="small" id="role"></div>
-        </div>
-        <div><button id="logout">تسجيل الخروج</button></div>
-      </div>
-      <hr style="margin:.75rem 0">
-      <div id="side-msg" class="small">نظام الطلبات البسيط</div>
-    </div>
-  </div>
-
+  <h2 style="color:#333;">إدارة الطلبات</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>الاسم</th><th>الهاتف</th><th>العنوان</th>
+        <th>عدد القطع</th><th>المقاس</th><th>الألوان</th>
+        <th>السعر</th><th>الشحن</th><th>الإجمالي</th>
+        <th>العمولة</th><th>ملحوظة</th><th>الحالة</th><th>إجراء</th>
+      </tr>
+    </thead>
+    <tbody id="ordersTable"></tbody>
+  </table>
   <script>
-    async function fetchMe(){ 
-      const res = await fetch('/api/me');
-      if (res.status === 401) { window.location.href = '/login.html'; return null; }
-      const data = await res.json(); return data.user;
+    async function loadOrders(){
+      const token=localStorage.getItem("token"); if(!token){alert("سجّل دخول أولاً");return;}
+      const res=await fetch("/api/orders",{headers:{"Authorization":"Bearer "+token}});
+      const orders=await res.json();
+      const tbody=document.getElementById("ordersTable"); tbody.innerHTML="";
+      orders.forEach(o=>{
+        const row=document.createElement("tr");
+        row.innerHTML=`
+          <td>${o.fullName||""}</td><td>${o.phone1||""}</td><td>${o.address||""}</td>
+          <td>${o.pieces||""}</td><td>${o.size||""}</td><td>${o.colors||""}</td>
+          <td>${o.priceNoShip||""}</td><td>${o.shipping||""}</td><td>${o.priceTotal||""}</td>
+          <td>${o.commission||""}</td><td>${o.note||""}</td><td>${o.status||""}</td>
+          <td><button class="ok" onclick="updateStatus('${o.id}','متاح')">✔</button>
+              <button class="no" onclick="updateStatus('${o.id}','غير متاح')">✖</button></td>`;
+        tbody.appendChild(row);
+      });
     }
-
-    function formatDate(ts){
-      if(!ts) return ''; try{ const d=new Date(ts.seconds*1000); return d.toLocaleString('ar-EG'); }catch(e){return '';}
+    async function updateStatus(id,status){
+      const token=localStorage.getItem("token");
+      const res=await fetch("/api/orders/"+id,{method:"PATCH",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify({status})});
+      const data=await res.json(); alert(data.message||data.error); loadOrders();
     }
-
-    function orderRow(order, isAdmin){
-      const statusText = order.available === 'available' ? 'متوفر' : (order.available==='unavailable'?'غير متوفر':'قيد المراجعة');
-      const badgeColor = order.available === 'available' ? 'background:var(--success);color:#fff' : (order.available==='unavailable'?'background:var(--danger);color:#fff':'background:#f3f4f6;color:#111');
-      let html = `<tr><td>${order.name}</td><td>${order.phones ? order.phones.join('، ') : ''}</td><td>${order.quantity}</td><td>${order.size || ''}</td><td>${order.colors || ''}</td><td>${order.totalPrice}</td><td><span class="status" style="${badgeColor}">${statusText}</span></td>`;
-      if(isAdmin){
-        html += `<td><button onclick="setAvail('${order.id}','available')">✔</button> <button onclick="setAvail('${order.id}','unavailable')">✖</button></td>`;
-      }
-      html += `<td>${formatDate(order.createdAt)}</td></tr>`;
-      return html;
-    }
-
-    async function loadDashboard(){
-      const user = await fetchMe();
-      if(!user) return;
-      document.getElementById('me').textContent = 'مرحباً، ' + user.username;
-      document.getElementById('role').textContent = 'الدور: ' + (user.role || 'user');
-      const isAdmin = (user.role === 'admin');
-      document.getElementById('title').textContent = isAdmin ? 'لوحة المدير - الطلبات' : 'لوحة العملاء - إضافة الطلب';
-
-      // Fetch orders
-      const res = await fetch('/api/orders');
-      const data = await res.json();
-      const orders = data.orders || [];
-
-      if(isAdmin){
-        // admin view: table of all orders with controls
-        let html = '<h2>جميع الطلبات</h2>';
-        html += '<table><thead><tr><th>الاسم</th><th>أرقام</th><th>الكمية</th><th>المقاس</th><th>الألوان</th><th>السعر الكلي</th><th>الحالة</th><th>التحكم</th><th>تاريخ</th></tr></thead><tbody>';
-        orders.forEach(o => html += orderRow(o, true));
-        html += '</tbody></table>';
-        document.getElementById('content').innerHTML = html;
-      } else {
-        // user view: form + their orders
-        let html = `<h2>أضف طلبًا جديدًا</h2>
-          <form id="orderForm">
-            <label>الاسم الثلاثي</label><input id="o_name" required>
-            <label>الرقمين (انفصل بفاصلة)</label><input id="o_phones" placeholder="012..., 011..." required>
-            <label>العنوان</label><input id="o_address">
-            <label>عدد القطع</label><input id="o_quantity" type="number" value="1" min="1">
-            <label>المقاس</label><input id="o_size">
-            <label>الألوان</label><input id="o_colors">
-            <label>السعر بدون شحن</label><input id="o_priceNoShip" type="number" step='0.01' value="0">
-            <label>مصاريف الشحن</label><input id="o_shipCost" type="number" step='0.01' value="0">
-            <label>العمولة</label><input id="o_commission" type="number" step='0.01' value="0">
-            <label>ملاحظات (مكان/ميعاد الاستلام)</label><textarea id="o_note"></textarea>
-            <div style="margin-top:.5rem"><button type="submit">إرسال الطلب</button></div>
-          </form>
-          <hr><h3>طلباتك</h3>`;
-        if(orders.length === 0) html += '<div class="small">لا توجد طلبات بعد.</div>';
-        else {
-          html += '<table><thead><tr><th>الاسم</th><th>أرقام</th><th>الكمية</th><th>المقاس</th><th>الألوان</th><th>السعر الكلي</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>';
-          orders.forEach(o => html += orderRow(o, false));
-          html += '</tbody></table>';
-        }
-        document.getElementById('content').innerHTML = html;
-        document.getElementById('orderForm').onsubmit = async (e) => {
-          e.preventDefault();
-          const name = document.getElementById('o_name').value.trim();
-          const phones = document.getElementById('o_phones').value.split(',').map(s=>s.trim()).filter(Boolean);
-          const address = document.getElementById('o_address').value.trim();
-          const quantity = Number(document.getElementById('o_quantity').value) || 1;
-          const size = document.getElementById('o_size').value.trim();
-          const colors = document.getElementById('o_colors').value.trim();
-          const priceNoShip = parseFloat(document.getElementById('o_priceNoShip').value) || 0;
-          const shipCost = parseFloat(document.getElementById('o_shipCost').value) || 0;
-          const commission = parseFloat(document.getElementById('o_commission').value) || 0;
-          const totalPrice = priceNoShip + shipCost + commission;
-          const note = document.getElementById('o_note').value.trim();
-          const payload = { name, phones, address, quantity, size, colors, priceNoShip, shipCost, totalPrice, commission, note };
-          try {
-            const r = await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-            const d = await r.json();
-            if(!r.ok) throw new Error(d.error||'حدث خطأ');
-            alert('تم إرسال الطلب');
-            loadDashboard(); // refresh
-          } catch (err) { alert(err.message); }
-        };
-      }
-    }
-
-    async function setAvail(id, val){
-      try {
-        const res = await fetch('/api/orders/' + id + '/availability', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ available: val }) });
-        const d = await res.json();
-        if(!res.ok) throw new Error(d.error || 'خطأ');
-        alert('تم تحديث الحالة');
-        loadDashboard();
-      } catch (e) { alert(e.message); }
-    }
-
-    document.getElementById('logout').onclick = async () => {
-      await fetch('/api/logout', { method:'POST' });
-      window.location.href = '/login.html';
-    };
-
-    // initial load
-    loadDashboard();
-    // optional: refresh every 12s to simulate live updates
-    setInterval(loadDashboard, 12000);
+    loadOrders();
   </script>
 </body>
 </html>
