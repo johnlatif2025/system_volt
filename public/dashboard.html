@@ -1,56 +1,182 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>لوحة التحكم</title>
-  <style>
-    body { font-family: Tahoma, Arial; direction: rtl; background:#f4f6f9; padding:20px; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    th,td { border:1px solid #ddd; padding:10px; text-align:center; font-size:14px; }
-    th { background:#007bff; color:#fff; }
-    tr:nth-child(even){ background:#f9f9f9; }
-    button { margin:2px; padding:6px 12px; border:none; border-radius:6px; color:#fff; cursor:pointer; }
-    .ok { background:#28a745; }
-    .no { background:#dc3545; }
-  </style>
+<meta charset="UTF-8">
+<title>لوحة تحكم المدير</title>
+<link rel="icon" href="https://i.postimg.cc/D0ywRzWK/Volt.jpg" type="image/png">
+<style>
+body { font-family: Tahoma, Arial; background:#eef2f7; direction:rtl; }
+.container { max-width:1200px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+h2 { text-align:center; margin-bottom:20px; color:#333; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; vertical-align: middle; }
+th { background:#f8f9fa; }
+button { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; color:#fff; }
+.accept { background:#28a745; }
+.reject { background:#dc3545; }
+button:hover { opacity:0.85; }
+.status { font-weight:bold; }
+.مقبول { color:green; }
+.مرفوض { color:red; }
+.قيد\\ المراجعة { color:orange; }
+.logout { float:left; background:#007bff; color:#fff; padding:8px 14px; border-radius:6px; margin-bottom:15px; cursor:pointer; }
+.logout:hover { opacity:0.85; }
+img { max-width: 80px; max-height: 80px; border-radius: 8px; }
+.logo-img { max-width:120px; max-height:60px; display:block; margin:0 auto 20px auto; }
+</style>
 </head>
 <body>
-  <h2 style="color:#333;">إدارة الطلبات</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>الاسم</th><th>الهاتف</th><th>العنوان</th>
-        <th>عدد القطع</th><th>المقاس</th><th>الألوان</th>
-        <th>السعر</th><th>الشحن</th><th>الإجمالي</th>
-        <th>العمولة</th><th>ملحوظة</th><th>الحالة</th><th>إجراء</th>
-      </tr>
-    </thead>
-    <tbody id="ordersTable"></tbody>
-  </table>
-  <script>
-    async function loadOrders(){
-      const token=localStorage.getItem("token"); if(!token){alert("سجّل دخول أولاً");return;}
-      const res=await fetch("/api/orders",{headers:{"Authorization":"Bearer "+token}});
-      const orders=await res.json();
-      const tbody=document.getElementById("ordersTable"); tbody.innerHTML="";
-      orders.forEach(o=>{
-        const row=document.createElement("tr");
-        row.innerHTML=`
-          <td>${o.fullName||""}</td><td>${o.phone1||""}</td><td>${o.address||""}</td>
-          <td>${o.pieces||""}</td><td>${o.size||""}</td><td>${o.colors||""}</td>
-          <td>${o.priceNoShip||""}</td><td>${o.shipping||""}</td><td>${o.priceTotal||""}</td>
-          <td>${o.commission||""}</td><td>${o.note||""}</td><td>${o.status||""}</td>
-          <td><button class="ok" onclick="updateStatus('${o.id}','متاح')">✔</button>
-              <button class="no" onclick="updateStatus('${o.id}','غير متاح')">✖</button></td>`;
-        tbody.appendChild(row);
-      });
-    }
-    async function updateStatus(id,status){
-      const token=localStorage.getItem("token");
-      const res=await fetch("/api/orders/"+id,{method:"PATCH",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify({status})});
-      const data=await res.json(); alert(data.message||data.error); loadOrders();
-    }
-    loadOrders();
-  </script>
+<div class="container">
+<img src="https://i.postimg.cc/D0ywRzWK/Volt.jpg" alt="Logo" class="logo-img">
+<button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
+
+<h2>📊 جميع الطلبات</h2>
+<table>
+<thead>
+<tr>
+<th>الاسم</th>
+<th>الهاتف1</th>
+<th>الهاتف2</th>
+<th>العنوان</th>
+<th>عدد القطع</th>
+<th>المقاس</th>
+<th>الألوان</th>
+<th>السعر بدون شحن</th>
+<th>مصاريف الشحن</th>
+<th>السعر شامل العمولة</th>
+<th>العمولة</th>
+<th>ملحوظة</th>
+<th>الصورة</th>
+<th>الحالة</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="ordersTable"></tbody>
+</table>
+
+<h2>🚚 تتبع الشحنة</h2>
+<table>
+<thead>
+<tr>
+<th>الاسم</th>
+<th>الهاتف1</th>
+<th>الهاتف2</th>
+<th>العنوان</th>
+<th>عدد القطع</th>
+<th>المقاس</th>
+<th>الألوان</th>
+<th>السعر شامل العمولة</th>
+<th>الحالة</th>
+<th>إجراء</th>
+</tr>
+</thead>
+<tbody id="shipmentTable"></tbody>
+</table>
+</div>
+
+<script>
+const token = localStorage.getItem("token"); 
+const role = localStorage.getItem("role");
+
+function logout(){ localStorage.clear(); window.location = "login.html"; }
+
+async function checkAuth(){
+  if(!token || role!=="admin"){ return window.location="login.html"; }
+  await loadOrders();
+  await loadShipmentOrders();
+}
+
+async function loadOrders(){
+  const res = await fetch("/api/orders",{ headers:{"Authorization":"Bearer "+token} });
+  const orders = await res.json();
+  renderOrders(orders);
+}
+
+function renderOrders(orders){
+  const table = document.getElementById("ordersTable");
+  table.innerHTML = "";
+  orders.forEach(o=>{
+    const imgHTML = o.imageUrl ? `<img src="${o.imageUrl}">` : "لا يوجد";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${o.fullName||""}</td>
+      <td>${o.phone1||""}</td>
+      <td>${o.phone2||""}</td>
+      <td>${o.address||""}</td>
+      <td>${o.pieces||""}</td>
+      <td>${o.size||""}</td>
+      <td>${o.colors||""}</td>
+      <td>${o.priceNoShip||""}</td>
+      <td>${o.shipping||""}</td>
+      <td>${o.priceTotal||""}</td>
+      <td>${o.commission||""}</td>
+      <td>${o.note||""}</td>
+      <td>${imgHTML}</td>
+      <td class="status ${o.status}">${o.status}</td>
+      <td>
+        <button class="accept" onclick="updateStatus('${o.id}','مقبول')">✔️</button>
+        <button class="reject" onclick="updateStatus('${o.id}','مرفوض')">❌</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+async function updateStatus(id,status){
+  const res = await fetch("/api/orders/"+id,{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+    body:JSON.stringify({status})
+  });
+  const data = await res.json();
+  alert(data.message||data.error);
+  loadOrders();
+  loadShipmentOrders();
+}
+
+async function loadShipmentOrders(){
+  const res = await fetch("/api/orders",{ headers:{"Authorization":"Bearer "+token} });
+  const orders = await res.json();
+  renderShipmentOrders(orders);
+}
+
+function renderShipmentOrders(orders){
+  const table = document.getElementById("shipmentTable");
+  table.innerHTML="";
+  orders.forEach(o=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${o.fullName||""}</td>
+      <td>${o.phone1||""}</td>
+      <td>${o.phone2||""}</td>
+      <td>${o.address||""}</td>
+      <td>${o.pieces||""}</td>
+      <td>${o.size||""}</td>
+      <td>${o.colors||""}</td>
+      <td>${o.priceTotal||""}</td>
+      <td class="status ${o.status}">${o.status}</td>
+      <td>
+        <button class="accept" onclick="updateShipmentStatus('${o.id}','تم تأكيد الأوردر')">✔️</button>
+        <button class="reject" onclick="updateShipmentStatus('${o.id}','تم الغاء الأوردر')">❌</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+async function updateShipmentStatus(id,status){
+  const res = await fetch("/api/orders/"+id,{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+    body:JSON.stringify({status})
+  });
+  const data = await res.json();
+  alert(data.message||data.error);
+  loadOrders();
+  loadShipmentOrders();
+}
+
+checkAuth();
+</script>
 </body>
 </html>

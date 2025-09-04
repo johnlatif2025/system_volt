@@ -1,52 +1,168 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>تسجيل / إنشاء حساب</title>
-  <style>
-    body { font-family: Tahoma, Arial; direction: rtl; text-align: center; background: #f4f6f9; }
-    .box { margin: 30px auto; width: 320px; padding: 20px; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    input { width: 90%; margin: 8px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-    button { width: 95%; margin-top: 10px; padding: 10px; border: none; border-radius: 6px; font-size: 15px; color: #fff; background: linear-gradient(90deg,#007bff,#0056b3); cursor: pointer; transition: 0.3s; }
-    button:hover { opacity: 0.9; }
-    .toggle { cursor: pointer; color: #007bff; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<title>تسجيل / دخول مستخدم</title>
+<link rel="icon" href="https://i.postimg.cc/D0ywRzWK/Volt.jpg" type="image/png">
+<style>
+  /* Body و container */
+  body {
+    font-family: Tahoma, Arial;
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wrapper {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* لوجو */
+  .logo-img {
+    max-width: 150px;
+    margin-bottom: 30px;
+  }
+
+  /* الصندوق */
+  .box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#007bff,#0056b3);
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .toggle {
+    margin-top: 10px;
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  .error {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+</style>
 </head>
 <body>
-  <h2 style="color:#333;">مرحباً بك 👋</h2>
+
+<div class="wrapper">
+  <!-- لوجو فوق -->
+  <img src="https://i.postimg.cc/D0ywRzWK/Volt.jpg" alt="Logo" class="logo-img">
+
+  <!-- صندوق إنشاء حساب -->
   <div class="box" id="registerBox">
-    <h3>إنشاء حساب</h3>
+    <h2>إنشاء حساب مستخدم</h2>
     <input type="text" id="regUsername" placeholder="اسم المستخدم">
     <input type="password" id="regPassword" placeholder="كلمة المرور">
     <button onclick="register()">تسجيل</button>
     <p>عندك حساب؟ <span class="toggle" onclick="showLogin()">سجّل دخول</span></p>
+    <div class="error" id="regError"></div>
   </div>
 
+  <!-- صندوق تسجيل الدخول -->
   <div class="box" id="loginBox" style="display:none;">
-    <h3>تسجيل دخول</h3>
+    <h2>تسجيل دخول مستخدم</h2>
     <input type="text" id="loginUsername" placeholder="اسم المستخدم">
     <input type="password" id="loginPassword" placeholder="كلمة المرور">
     <button onclick="login()">دخول</button>
     <p>لسه معندكش حساب؟ <span class="toggle" onclick="showRegister()">إنشاء حساب</span></p>
+    <div class="error" id="loginError"></div>
   </div>
+</div>
 
-  <script>
-    function showLogin(){ document.getElementById("registerBox").style.display="none"; document.getElementById("loginBox").style.display="block"; }
-    function showRegister(){ document.getElementById("registerBox").style.display="block"; document.getElementById("loginBox").style.display="none"; }
-    async function register(){
-      const username=document.getElementById("regUsername").value;
-      const password=document.getElementById("regPassword").value;
-      const res=await fetch("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
-      const data=await res.json(); alert(data.message||data.error);
-    }
-    async function login(){
-      const username=document.getElementById("loginUsername").value;
-      const password=document.getElementById("loginPassword").value;
-      const res=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
-      const data=await res.json();
-      if(data.token){ localStorage.setItem("token",data.token); if(data.role==="admin"){window.location="login.html";} else {window.location="orders.html";} }
-      else alert(data.error);
-    }
-  </script>
+<script>
+function showLogin(){
+  document.getElementById("registerBox").style.display = "none";
+  document.getElementById("loginBox").style.display = "block";
+}
+function showRegister(){
+  document.getElementById("registerBox").style.display = "block";
+  document.getElementById("loginBox").style.display = "none";
+}
+
+async function register(){
+  const username = document.getElementById("regUsername").value;
+  const password = document.getElementById("regPassword").value;
+  const errorDiv = document.getElementById("regError");
+  errorDiv.textContent = "";
+  try {
+    const res = await fetch("/api/register-user", {
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(!res.ok) errorDiv.textContent = data.error || "فشل التسجيل";
+    else alert(data.message);
+  } catch(err){ errorDiv.textContent="خطأ في الاتصال بالسيرفر"; }
+}
+
+async function login(){
+  const username = document.getElementById("loginUsername").value;
+  const password = document.getElementById("loginPassword").value;
+  const errorDiv = document.getElementById("loginError");
+  errorDiv.textContent = "";
+  try {
+    const res = await fetch("/api/login-user", {
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(!res.ok){ errorDiv.textContent = data.error || "فشل تسجيل الدخول"; return; }
+    if(data.token){
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role);
+      if(data.role==="user") window.location="orders.html";
+    } else { errorDiv.textContent="لم يتم استلام التوكن من السيرفر"; }
+  } catch(err){ errorDiv.textContent="خطأ في الاتصال بالسيرفر"; }
+}
+</script>
+
 </body>
 </html>

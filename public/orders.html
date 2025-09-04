@@ -1,116 +1,152 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>إضافة طلب</title>
-  <style>
-    body { 
-      font-family: Tahoma, Arial; 
-      direction: rtl; 
-      background: #f4f6f9; 
-      text-align: center; 
-    }
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      background: #fafafa;
-      transition: 0.2s;
-    }
-    input:focus, textarea:focus {
-      border-color: #007bff;
-      outline: none;
-      background: #fff;
-      box-shadow: 0 0 5px rgba(0,123,255,0.3);
-    }
-    textarea {
-      grid-column: span 2;
-      resize: none;
-      min-height: 80px;
-    }
-    button {
-      grid-column: span 2;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      color: #fff;
-      background: linear-gradient(90deg,#28a745,#218838);
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-  </style>
+<meta charset="UTF-8">
+<title>طلبات المستخدم</title>
+<link rel="icon" href="https://i.postimg.cc/D0ywRzWK/Volt.jpg" type="image/png">
+<style>
+body { font-family: Tahoma, Arial; background:#f4f6f9; direction:rtl; margin:0; padding:0; }
+.container { max-width:1000px; margin:40px auto; background:#fff; padding:30px; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+h2 { text-align:center; margin-bottom:20px; color:#333; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin-bottom:20px; }
+input, textarea { width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; background:#fafafa; }
+textarea { grid-column:span 2; min-height:80px; resize:none; }
+button { grid-column:span 2; padding:14px; border:none; border-radius:8px; background:linear-gradient(90deg,#28a745,#218838); color:#fff; cursor:pointer; font-size:15px; }
+button:hover { opacity:0.9; }
+table { width:100%; border-collapse:collapse; margin-top:30px; table-layout: fixed; word-wrap: break-word; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; vertical-align: middle; }
+th { background:#f8f9fa; }
+.status { font-weight:bold; }
+.مقبول { color:green; }
+.مرفوض { color:red; }
+.قيد\\ المراجعة { color:orange; }
+.logout { float:left; background:#007bff; color:#fff; padding:8px 14px; border-radius:6px; margin-bottom:15px; cursor:pointer; }
+.logout:hover { opacity:0.85; }
+img { max-width:80px; border-radius:6px; cursor:pointer; }
+.logo-img { max-width:120px; max-height:60px; display:block; margin:0 auto 20px auto; }
+@media screen and (max-width:768px){
+  table, thead, tbody, th, td, tr { display:block; }
+  th { display:none; }
+  td { border:none; position:relative; padding-left:50%; margin-bottom:10px; text-align:right; }
+  td:before { position:absolute; left:10px; width:45%; white-space:nowrap; font-weight:bold; }
+  td:nth-of-type(1):before { content:"الاسم"; }
+  td:nth-of-type(2):before { content:"الهاتف1"; }
+  td:nth-of-type(3):before { content:"الهاتف2"; }
+  td:nth-of-type(4):before { content:"العنوان"; }
+  td:nth-of-type(5):before { content:"عدد القطع"; }
+  td:nth-of-type(6):before { content:"المقاس"; }
+  td:nth-of-type(7):before { content:"الألوان"; }
+  td:nth-of-type(8):before { content:"السعر بدون شحن"; }
+  td:nth-of-type(9):before { content:"مصاريف الشحن"; }
+  td:nth-of-type(10):before { content:"السعر شامل العمولة"; }
+  td:nth-of-type(11):before { content:"العمولة"; }
+  td:nth-of-type(12):before { content:"ملحوظة"; }
+  td:nth-of-type(13):before { content:"الصورة"; }
+  td:nth-of-type(14):before { content:"الحالة"; }
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>إضافة طلب جديد</h2>
-    <div class="grid">
-      <input type="text" id="fullName" placeholder="الاسم الثلاثي">
-      <input type="text" id="phone1" placeholder="رقم الهاتف الأول">
-      <input type="text" id="phone2" placeholder="رقم الهاتف الثاني">
-      <input type="text" id="address" placeholder="العنوان بالتفصيل">
-      <input type="number" id="pieces" placeholder="عدد القطع">
-      <input type="text" id="size" placeholder="المقاس">
-      <input type="text" id="colors" placeholder="الألوان">
-      <input type="number" id="priceNoShip" placeholder="السعر بدون شحن">
-      <input type="number" id="shipping" placeholder="مصاريف الشحن">
-      <input type="number" id="priceTotal" placeholder="سعر البيع شامل العمولة">
-      <input type="number" id="commission" placeholder="العمولة">
-      <textarea id="note" placeholder="ملحوظة (ميعاد/مكان الاستلام)"></textarea>
-      <button onclick="addOrder()">📦 إرسال الطلب</button>
-    </div>
-  </div>
+<div class="container">
+<img src="https://i.postimg.cc/D0ywRzWK/Volt.jpg" alt="Logo" class="logo-img">
+<button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
 
-  <script>
-    async function addOrder(){
-      const token=localStorage.getItem("token"); 
-      if(!token){alert("سجّل دخول أولاً");return;}
-      const order={
-        fullName:fullName.value,
-        phone1:phone1.value,
-        phone2:phone2.value,
-        address:address.value,
-        pieces:pieces.value,
-        size:size.value,
-        colors:colors.value,
-        priceNoShip:priceNoShip.value,
-        shipping:shipping.value,
-        priceTotal:priceTotal.value,
-        commission:commission.value,
-        note:note.value
-      };
-      const res=await fetch("/api/orders",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-        body:JSON.stringify(order)
-      });
-      const data=await res.json(); 
-      alert(data.message||data.error);
-    }
-  </script>
+<h2>إضافة طلب جديد</h2>
+<div class="grid">
+  <input type="text" id="fullName" placeholder="الاسم الثلاثي">
+  <input type="text" id="phone1" placeholder="رقم الهاتف الأول">
+  <input type="text" id="phone2" placeholder="رقم الهاتف الثاني">
+  <input type="text" id="address" placeholder="العنوان بالتفصيل">
+  <input type="number" id="pieces" placeholder="عدد القطع">
+  <input type="text" id="size" placeholder="المقاس">
+  <input type="text" id="colors" placeholder="الألوان">
+  <input type="number" id="priceNoShip" placeholder="السعر بدون شحن">
+  <input type="number" id="shipping" placeholder="مصاريف الشحن">
+  <input type="number" id="priceTotal" placeholder="سعر البيع شامل العمولة">
+  <input type="number" id="commission" placeholder="العمولة">
+  <textarea id="note" placeholder="ملحوظة (ميعاد/مكان الاستلام)"></textarea>
+  <input type="file" id="image" accept="image/*">
+  <button onclick="addOrder()">📦 إرسال الطلب</button>
+</div>
+
+<h2>📋 طلباتي السابقة</h2>
+<table>
+<thead>
+<tr>
+<th>الاسم</th>
+<th>الهاتف1</th>
+<th>الهاتف2</th>
+<th>العنوان</th>
+<th>عدد القطع</th>
+<th>المقاس</th>
+<th>الألوان</th>
+<th>السعر بدون شحن</th>
+<th>مصاريف الشحن</th>
+<th>السعر شامل العمولة</th>
+<th>العمولة</th>
+<th>ملحوظة</th>
+<th>الصورة</th>
+<th>الحالة</th>
+</tr>
+</thead>
+<tbody id="ordersTable"></tbody>
+</table>
+</div>
+
+<script>
+const token = localStorage.getItem("token"); 
+const role = localStorage.getItem("role");
+
+function logout(){ localStorage.clear(); window.location = "index.html"; }
+
+async function checkAuth(){ if(!token || role!=="user"){ return window.location="index.html"; } await loadOrders(); }
+
+async function addOrder(){
+  if(!fullName.value.trim() || !phone1.value.trim() || !address.value.trim()){ alert("الاسم، الهاتف الأول، والعنوان مطلوبين"); return; }
+  const formData = new FormData();
+  ["fullName","phone1","phone2","address","pieces","size","colors","priceNoShip","shipping","priceTotal","commission","note"].forEach(f=>{
+    if(document.getElementById(f).value) formData.append(f, document.getElementById(f).value);
+  });
+  if(image.files[0]) formData.append("image", image.files[0]);
+  const res = await fetch("/api/orders",{ method:"POST", headers:{"Authorization":"Bearer "+token}, body: formData });
+  const data = await res.json(); 
+  alert(data.message || data.error);
+  loadOrders();
+}
+
+async function loadOrders(){
+  const res = await fetch("/api/orders",{ headers:{"Authorization":"Bearer "+token} });
+  const orders = await res.json();
+  renderOrders(orders);
+}
+
+function renderOrders(orders){
+  const table = document.getElementById("ordersTable");
+  table.innerHTML="";
+  orders.forEach(o=>{
+    const imgHTML=o.imageUrl?`<img src="${o.imageUrl}" onclick="window.open('${o.imageUrl}','_blank')">`:"لا يوجد";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${o.fullName||""}</td>
+      <td>${o.phone1||""}</td>
+      <td>${o.phone2||""}</td>
+      <td>${o.address||""}</td>
+      <td>${o.pieces||""}</td>
+      <td>${o.size||""}</td>
+      <td>${o.colors||""}</td>
+      <td>${o.priceNoShip||""}</td>
+      <td>${o.shipping||""}</td>
+      <td>${o.priceTotal||""}</td>
+      <td>${o.commission||""}</td>
+      <td>${o.note||""}</td>
+      <td>${imgHTML}</td>
+      <td class="status ${o.status}">${o.status}</td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+checkAuth();
+</script>
 </body>
 </html>

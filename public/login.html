@@ -2,30 +2,53 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>دخول المدير</title>
+  <title>تسجيل دخول المدير</title>
+  <link rel="icon" href="https://i.postimg.cc/D0ywRzWK/Volt.jpg" type="image/png">
   <style>
-    body { font-family: Tahoma, Arial; direction: rtl; background:#f4f6f9; text-align:center; }
-    .box { margin: 30px auto; width: 320px; padding:20px; background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    input { width:90%; margin:8px 0; padding:10px; border:1px solid #ccc; border-radius:6px; }
-    button { width:95%; margin-top:10px; padding:10px; border:none; border-radius:6px; font-size:15px; color:#fff; background:linear-gradient(90deg,#6f42c1,#563d7c); cursor:pointer; }
-    button:hover { opacity:0.9; }
+    body { font-family: Tahoma, Arial; background: #f4f6f9; display:flex; justify-content:center; align-items:center; height:100vh; direction:rtl; }
+    .login-box { background: #fff; padding: 30px; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.1); width:350px; text-align:center; }
+    h2 { margin-bottom: 20px; color: #333; }
+    input { width: 100%; padding: 12px; margin: 8px 0; border:1px solid #ddd; border-radius:8px; background:#fafafa; }
+    input:focus { border-color:#007bff; outline:none; background:#fff; }
+    button { width:100%; padding:14px; border:none; border-radius:8px; font-size:16px; color:#fff; background:linear-gradient(90deg,#007bff,#0056b3); cursor:pointer; margin-top:10px; transition:0.3s; }
+    button:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+    .error { color:red; margin-top:10px; font-size:14px; }
+    .logo-img { max-width:120px; display:block; margin:0 auto 20px auto; cursor:pointer; }
   </style>
 </head>
 <body>
-  <h2 style="color:#333;">لوحة المدير</h2>
-  <div class="box">
-    <input type="text" id="username" placeholder="اسم المستخدم">
+  <div class="login-box">
+  <img src="https://i.postimg.cc/D0ywRzWK/Volt.jpg" alt="Logo" class="logo-img">
+    </a>
+
+    <h2>دخول المدير</h2>
+    <input type="text" id="username" placeholder="اسم المدير">
     <input type="password" id="password" placeholder="كلمة المرور">
-    <button onclick="loginAdmin()">دخول</button>
+    <button onclick="adminLogin()">دخول</button>
+    <div class="error" id="error"></div>
   </div>
-  <script>
-    async function loginAdmin(){
-      const username=document.getElementById("username").value;
-      const password=document.getElementById("password").value;
-      const res=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
-      const data=await res.json();
-      if(data.token&&data.role==="admin"){localStorage.setItem("token",data.token);window.location="dashboard.html";} else alert("غير مصرح لك");
-    }
-  </script>
+
+<script>
+async function adminLogin() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const errorDiv = document.getElementById("error");
+  errorDiv.textContent = "";
+
+  try {
+    const res = await fetch("/api/login-admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) { errorDiv.textContent = data.error || "خطأ غير متوقع"; return; }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+    window.location.href = "dashboard.html";
+  } catch(err) { errorDiv.textContent="فشل الاتصال بالسيرفر"; console.error(err); }
+}
+</script>
 </body>
 </html>
